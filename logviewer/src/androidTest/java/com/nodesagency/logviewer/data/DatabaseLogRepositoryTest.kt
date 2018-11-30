@@ -5,6 +5,7 @@ import android.support.test.runner.AndroidJUnit4
 import androidx.room.Room
 import com.nodesagency.logviewer.data.database.DatabaseLogRepository
 import com.nodesagency.logviewer.data.database.LogDatabase
+import com.nodesagency.logviewer.data.database.entities.Category
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -15,6 +16,8 @@ internal class DatabaseLogRepositoryTest {
 
     lateinit var repository: DatabaseLogRepository
 
+    private val expectedGeneralCategory = Category(0, "General")
+
     @Before
     fun setUp() {
         val context = InstrumentationRegistry.getContext()
@@ -24,10 +27,11 @@ internal class DatabaseLogRepositoryTest {
     }
 
     @Test
-    fun returns_empty_list_if_no_categories_are_stored() {
+    fun returns_general_category_if_no_others_have_been_added() {
         val categories = repository.getAllCategoriesAlphabeticallySorted()
 
-        assertEquals(0, categories.size)
+        assertEquals(1, categories.size)
+        assertEquals(expectedGeneralCategory, categories[0])
     }
 
     @Test
@@ -42,8 +46,9 @@ internal class DatabaseLogRepositoryTest {
 
         val categories = repository.getAllCategoriesAlphabeticallySorted()
 
-        assertEquals(categoryA, categories[0].name)
-        assertEquals(categoryB, categories[1].name)
-        assertEquals(categoryC, categories[2].name)
+        assertEquals(expectedGeneralCategory, categories[0])
+        assertEquals(categoryA, categories[1].name)
+        assertEquals(categoryB, categories[2].name)
+        assertEquals(categoryC, categories[3].name)
     }
 }
