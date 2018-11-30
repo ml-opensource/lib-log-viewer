@@ -7,7 +7,7 @@ import androidx.room.Query
 import com.nodesagency.logviewer.data.database.entities.Category
 
 @Dao
-interface CategoryDao {
+internal interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(category: Category)

@@ -3,7 +3,7 @@ package com.nodesagency.logviewer.data.database
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.database.entities.Category
 
-class DatabaseLogRepository(private val database: LogDatabase) : LogRepository {
+internal class DatabaseLogRepository(private val database: LogDatabase) : LogRepository {
 
     override fun getAllCategoriesAlphabeticallySorted(): List<Category> {
         return database.categoryDao().getAllAlphabeticallySorted()
@@ -12,5 +12,4 @@ class DatabaseLogRepository(private val database: LogDatabase) : LogRepository {
     override fun insertCategory(categoryName: String) {
         database.categoryDao().insert(Category(name = categoryName))
     }
-
 }
