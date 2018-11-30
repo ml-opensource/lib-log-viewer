@@ -25,7 +25,7 @@ object Logger {
         message: String,
         tag: String? = null,
         categoryName: String = GENERAL_CATEGORY_NAME
-    ) {
+    ) = doAfterInitializationCheck {
         val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
 
         logRepository.insertLogEntry(
@@ -33,6 +33,19 @@ object Logger {
             message = message,
             tag = tag
         )
+    }
+
+    fun getRepository(): LogRepository = doAfterInitializationCheck { logRepository }
+
+    private fun <T> doAfterInitializationCheck(doAfter: () -> T): T {
+        if (!isInitialized) {
+            throw IllegalStateException(
+                "You need to call Logger.initialize(...) before using the class. " +
+                        "It is recommended to do it during your application's onCreate()."
+            )
+        }
+
+        return doAfter()
     }
 
     private fun insertNewCategory(categoryName: String): Long {

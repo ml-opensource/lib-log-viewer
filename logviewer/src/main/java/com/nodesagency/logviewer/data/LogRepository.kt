@@ -8,6 +8,8 @@ interface LogRepository {
 
     fun getAllCategoriesAlphabeticallySorted(): List<Category>
 
+    fun getAlphabeticallySortedCategories(skip: Long, limit: Long): List<Category>
+
     /**
      * Inserts a category if the ID is null or replaces it if the ID already exists.
      *

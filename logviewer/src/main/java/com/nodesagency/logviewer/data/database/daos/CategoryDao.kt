@@ -18,4 +18,7 @@ internal interface CategoryDao {
     @Query("SELECT * FROM Categories WHERE name = :name LIMIT 1")
     fun getCategoryWithName(name: String): Category?
 
+    @Query("SELECT * FROM Categories LIMIT :limit OFFSET :skip")
+    fun getAlphabeticallySorted(skip: Long, limit: Long): List<Category>
+
 }

@@ -16,6 +16,12 @@ internal class DatabaseLogRepository(
             .getAllAlphabeticallySorted()
     }
 
+    override fun getAlphabeticallySortedCategories(skip: Long, limit: Long): List<Category> {
+        return database
+            .categoryDao()
+            .getAlphabeticallySorted(skip, limit)
+    }
+
     override fun put(category: Category): Long {
         return database
             .categoryDao()

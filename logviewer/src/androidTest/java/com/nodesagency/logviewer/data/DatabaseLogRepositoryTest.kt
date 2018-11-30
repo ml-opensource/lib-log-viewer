@@ -49,6 +49,29 @@ internal class DatabaseLogRepositoryTest {
     }
 
     @Test
+    fun returns_values_properly_when_skip_and_offset_are_applied() {
+        val categoryNameFormat = "category_%d"
+        val range = (0 until 10)
+        val categoryNames = range.map { categoryNameFormat.format(it) }
+        val skip = 2L
+        val limit = 3L
+
+        categoryNames.forEach { name ->
+            repository.put(Category(name = name))
+        }
+
+        val allCategoriesCount = repository.getAllCategoriesAlphabeticallySorted().count()
+        val skippedAndLimitedCategories = repository.getAlphabeticallySortedCategories(skip, limit)
+        val expectedFirstCategoryName = categoryNameFormat.format(skip)
+        val expectedLastCategoryName = categoryNameFormat.format(skip + limit - 1)
+
+        assertEquals(range.count(), allCategoriesCount)
+        assertEquals(limit, skippedAndLimitedCategories.count().toLong())
+        assertEquals(expectedFirstCategoryName, skippedAndLimitedCategories.first().name)
+        assertEquals(expectedLastCategoryName, skippedAndLimitedCategories.last().name)
+    }
+
+    @Test
     fun clears_all_entries_properly() {
         val categoryAName = "categoryA"
         val categoryBName = "categoryB"
