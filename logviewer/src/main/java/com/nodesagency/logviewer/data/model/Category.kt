@@ -1,11 +1,11 @@
-package com.nodesagency.logviewer.data.database.entities
+package com.nodesagency.logviewer.data.model
 
 import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity
+@Entity(tableName = "Categories")
 data class Category(
-    @PrimaryKey(autoGenerate = true) val id: Int? = null,
+    @PrimaryKey(autoGenerate = true) val id: Long? = null,
     @ColumnInfo(name = "name") val name: String
 )

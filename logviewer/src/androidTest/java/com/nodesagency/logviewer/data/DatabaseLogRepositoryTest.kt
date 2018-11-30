@@ -5,7 +5,7 @@ import android.support.test.runner.AndroidJUnit4
 import androidx.room.Room
 import com.nodesagency.logviewer.data.database.DatabaseLogRepository
 import com.nodesagency.logviewer.data.database.LogDatabase
-import com.nodesagency.logviewer.data.database.entities.Category
+import com.nodesagency.logviewer.data.model.Category
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
@@ -15,15 +15,14 @@ import org.junit.runner.RunWith
 internal class DatabaseLogRepositoryTest {
 
     lateinit var repository: DatabaseLogRepository
-
-    private val expectedGeneralCategory = Category(0, "General")
+    private val expectedGeneralCategory = Category(GENERAL_CATEGORY_ID, GENERAL_CATEGORY_NAME)
 
     @Before
     fun setUp() {
         val context = InstrumentationRegistry.getContext()
         val database = Room.inMemoryDatabaseBuilder(context, LogDatabase::class.java).build()
 
-        repository = DatabaseLogRepository(database)
+        repository = DatabaseLogRepository(context, database)
     }
 
     @Test
