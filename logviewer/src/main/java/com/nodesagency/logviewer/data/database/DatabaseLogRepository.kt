@@ -16,10 +16,10 @@ internal class DatabaseLogRepository(
             .getAllAlphabeticallySorted()
     }
 
-    override fun insertCategory(categoryName: String) {
-        database
+    override fun put(category: Category): Long {
+        return database
             .categoryDao()
-            .insert(Category(name = categoryName))
+            .insert(category)
     }
 
     override fun getLogEntriesForCategory(categoryId: Long): List<LogEntry> {
@@ -45,5 +45,9 @@ internal class DatabaseLogRepository(
             .categoryDao()
             .getCategoryWithName(name)
             ?.id
+    }
+
+    override fun clear() {
+        return database.clearAllTables()
     }
 }

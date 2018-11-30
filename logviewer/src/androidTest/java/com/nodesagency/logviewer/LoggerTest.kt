@@ -2,16 +2,15 @@ package com.nodesagency.logviewer
 
 import android.support.test.InstrumentationRegistry
 import androidx.room.Room
-import com.nodesagency.logviewer.data.GENERAL_CATEGORY_ID
 import com.nodesagency.logviewer.data.database.DatabaseLogRepository
 import com.nodesagency.logviewer.data.database.LogDatabase
 import junit.framework.Assert.assertEquals
+import org.junit.After
 import org.junit.Before
 import org.junit.Test
 
 class LoggerTest {
 
-    private lateinit var logger: Logger
     private lateinit var logRepository: DatabaseLogRepository
 
     @Before
@@ -21,6 +20,11 @@ class LoggerTest {
         logRepository = DatabaseLogRepository(context, inMemoryDatabase)
 
         Logger.initialize(context, logRepository)
+    }
+
+    @After
+    fun tearDown() {
+        logRepository.clear()
     }
 
     @Test

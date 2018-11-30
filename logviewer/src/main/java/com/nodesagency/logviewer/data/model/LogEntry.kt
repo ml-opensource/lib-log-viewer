@@ -3,8 +3,10 @@ package com.nodesagency.logviewer.data.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
-import com.nodesagency.logviewer.data.GENERAL_CATEGORY_ID
 
+/**
+ * The model for log entries. If [categoryId] is not specified, it will be part of the general log category.
+ */
 @Entity(
     tableName = "LogEntries",
     foreignKeys = [ForeignKey(
@@ -16,7 +18,7 @@ import com.nodesagency.logviewer.data.GENERAL_CATEGORY_ID
 )
 data class LogEntry(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    val categoryId: Long = GENERAL_CATEGORY_ID,
+    val categoryId: Long? = null,
     val message: String,
     val tag: String? = null
 )

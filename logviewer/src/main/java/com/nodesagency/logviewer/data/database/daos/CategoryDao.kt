@@ -10,7 +10,7 @@ import com.nodesagency.logviewer.data.model.Category
 internal interface CategoryDao {
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insert(category: Category)
+    fun insert(category: Category): Long
 
     @Query("SELECT * FROM Categories ORDER BY name ASC")
     fun getAllAlphabeticallySorted(): List<Category>

@@ -15,7 +15,6 @@ import org.junit.runner.RunWith
 internal class DatabaseLogRepositoryTest {
 
     lateinit var repository: DatabaseLogRepository
-    private val expectedGeneralCategory = Category(GENERAL_CATEGORY_ID, GENERAL_CATEGORY_NAME)
 
     @Before
     fun setUp() {
@@ -34,18 +33,52 @@ internal class DatabaseLogRepositoryTest {
 
     @Test
     fun returns_all_stored_categories_alphabetically() {
-        val categoryA = "categoryA"
-        val categoryB = "categoryB"
-        val categoryC = "categoryC"
+        val categoryAName = "categoryA"
+        val categoryBName = "categoryB"
+        val categoryCName = "categoryC"
 
-        repository.insertCategory(categoryC)
-        repository.insertCategory(categoryA)
-        repository.insertCategory(categoryB)
+        repository.put(Category(name = categoryCName))
+        repository.put(Category(name = categoryAName))
+        repository.put(Category(name = categoryBName))
 
         val categories = repository.getAllCategoriesAlphabeticallySorted()
 
-        assertEquals(categoryA, categories[0].name)
-        assertEquals(categoryB, categories[1].name)
-        assertEquals(categoryC, categories[2].name)
+        assertEquals(categoryAName, categories[0].name)
+        assertEquals(categoryBName, categories[1].name)
+        assertEquals(categoryCName, categories[2].name)
+    }
+
+    @Test
+    fun clears_all_entries_properly() {
+        val categoryAName = "categoryA"
+        val categoryBName = "categoryB"
+        val categoryCName = "categoryC"
+
+        repository.put(Category(name = categoryCName))
+        repository.put(Category(name = categoryAName))
+        repository.put(Category(name = categoryBName))
+
+        val storedCategories = repository.getAllCategoriesAlphabeticallySorted()
+
+        repository.clear()
+
+        val categoriesAfterRemoval = repository.getAllCategoriesAlphabeticallySorted()
+
+        assertEquals(3, storedCategories.size)
+        assertEquals(0, categoriesAfterRemoval.size)
+    }
+
+    @Test
+    fun replaces_category_with_existing_id() {
+        val oldCategory = Category(id = 0, name = "Old category")
+        val newCategory = Category(id = 0, name = "New category")
+
+        repository.put(oldCategory)
+        repository.put(newCategory)
+
+        val storedCategories = repository.getAllCategoriesAlphabeticallySorted()
+
+        assertEquals(1, storedCategories.size)
+        assertEquals(newCategory, storedCategories[0])
     }
 }
