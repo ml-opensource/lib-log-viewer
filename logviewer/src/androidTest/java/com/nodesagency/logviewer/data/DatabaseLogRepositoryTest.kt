@@ -25,8 +25,25 @@ internal class DatabaseLogRepositoryTest {
 
     @Test
     fun returns_empty_list_if_no_categories_are_stored() {
-        val categories = repository.getAllCategories()
+        val categories = repository.getAllCategoriesAlphabeticallySorted()
 
         assertEquals(0, categories.size)
+    }
+
+    @Test
+    fun returns_all_stored_categories_alphabetically() {
+        val categoryA = "categoryA"
+        val categoryB = "categoryB"
+        val categoryC = "categoryC"
+
+        repository.insertCategory(categoryC)
+        repository.insertCategory(categoryA)
+        repository.insertCategory(categoryB)
+
+        val categories = repository.getAllCategoriesAlphabeticallySorted()
+
+        assertEquals(categoryA, categories[0].name)
+        assertEquals(categoryB, categories[1].name)
+        assertEquals(categoryC, categories[2].name)
     }
 }

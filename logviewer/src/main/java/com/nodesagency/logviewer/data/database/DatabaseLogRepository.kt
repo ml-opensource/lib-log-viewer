@@ -3,10 +3,14 @@ package com.nodesagency.logviewer.data.database
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.database.entities.Category
 
-class DatabaseLogRepository(database: LogDatabase) : LogRepository {
+class DatabaseLogRepository(private val database: LogDatabase) : LogRepository {
 
-    override fun getAllCategories(): List<Category> {
-        return listOf()
+    override fun getAllCategoriesAlphabeticallySorted(): List<Category> {
+        return database.categoryDao().getAllAlphabeticallySorted()
+    }
+
+    override fun insertCategory(categoryName: String) {
+        database.categoryDao().insert(Category(name = categoryName))
     }
 
 }
