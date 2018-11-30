@@ -71,6 +71,31 @@ internal class DatabaseLogRepositoryTest {
         assertEquals(expectedLastCategoryName, skippedAndLimitedCategories.last().name)
     }
 
+
+    @Test
+    fun returns_all_existing_values_if_limit_is_too_high() {
+        val categoryNameFormat = "category_%d"
+        val skip = 0L
+        val limit = 10L
+        val actualValueCount = 3
+        val categoryNames = (0 until actualValueCount).map { categoryNameFormat.format(it) }
+
+        categoryNames.forEach { name ->
+            repository.put(Category(name = name))
+        }
+
+        val allCategoriesCount = repository.getAllCategoriesAlphabeticallySorted().count()
+        val skippedAndLimitedCategories = repository.getAlphabeticallySortedCategories(skip, limit)
+        val expectedFirstCategoryName = categoryNameFormat.format(skip)
+        val expectedLastCategoryName = categoryNameFormat.format(actualValueCount - 1)
+
+        assertEquals(actualValueCount, allCategoriesCount)
+        assertEquals(actualValueCount, skippedAndLimitedCategories.count())
+        assertEquals(expectedFirstCategoryName, skippedAndLimitedCategories.first().name)
+        assertEquals(expectedLastCategoryName, skippedAndLimitedCategories.last().name)
+    }
+
+
     @Test
     fun clears_all_entries_properly() {
         val categoryAName = "categoryA"
