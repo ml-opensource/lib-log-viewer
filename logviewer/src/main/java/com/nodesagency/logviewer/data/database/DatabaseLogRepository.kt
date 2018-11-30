@@ -1,8 +1,6 @@
 package com.nodesagency.logviewer.data.database
 
 import android.content.Context
-import com.nodesagency.logviewer.data.GENERAL_CATEGORY_ID
-import com.nodesagency.logviewer.data.GENERAL_CATEGORY_NAME
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
@@ -11,16 +9,6 @@ internal class DatabaseLogRepository(
     private val context: Context,
     private val database: LogDatabase = LogDatabase.createDefault(context)
 ) : LogRepository {
-    init {
-        database
-            .categoryDao()
-            .insert(
-                Category(
-                    id = GENERAL_CATEGORY_ID,
-                    name = GENERAL_CATEGORY_NAME
-                )
-            )
-    }
 
     override fun getAllCategoriesAlphabeticallySorted(): List<Category> {
         return database

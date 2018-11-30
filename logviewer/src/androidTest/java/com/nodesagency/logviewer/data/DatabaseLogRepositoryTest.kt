@@ -26,11 +26,10 @@ internal class DatabaseLogRepositoryTest {
     }
 
     @Test
-    fun returns_general_category_if_no_others_have_been_added() {
+    fun returns_no_categories_if_no_log_entries_have_been_recorded() {
         val categories = repository.getAllCategoriesAlphabeticallySorted()
 
-        assertEquals(1, categories.size)
-        assertEquals(expectedGeneralCategory, categories[0])
+        assertEquals(0, categories.size)
     }
 
     @Test
@@ -45,9 +44,8 @@ internal class DatabaseLogRepositoryTest {
 
         val categories = repository.getAllCategoriesAlphabeticallySorted()
 
-        assertEquals(expectedGeneralCategory, categories[0])
-        assertEquals(categoryA, categories[1].name)
-        assertEquals(categoryB, categories[2].name)
-        assertEquals(categoryC, categories[3].name)
+        assertEquals(categoryA, categories[0].name)
+        assertEquals(categoryB, categories[1].name)
+        assertEquals(categoryC, categories[2].name)
     }
 }
