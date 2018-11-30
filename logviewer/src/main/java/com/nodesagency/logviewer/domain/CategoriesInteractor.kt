@@ -7,7 +7,7 @@ import com.nodesagency.logviewer.data.model.Category
 private const val NO_SKIP = 0L
 private const val NO_LIMIT = -1L
 
-class GetAllCategoriesInteractor(
+class CategoriesInteractor(
     private val logRepository: LogRepository = Logger.getRepository()
 ) {
     suspend fun getCategories(skip: Long = NO_SKIP, limit: Long = NO_LIMIT): List<Category> {
