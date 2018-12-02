@@ -4,6 +4,9 @@ import android.content.Context
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.database.DatabaseLogRepository
 import com.nodesagency.logviewer.data.model.Category
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 internal const val GENERAL_CATEGORY_ID = 0L
 internal const val GENERAL_CATEGORY_NAME = "General"
@@ -12,6 +15,7 @@ object Logger {
 
     private var isInitialized = false
     private lateinit var logRepository: LogRepository
+    private val uiScope = CoroutineScope(Dispatchers.Default)
 
     fun initialize(
         context: Context,
@@ -26,13 +30,15 @@ object Logger {
         tag: String? = null,
         categoryName: String = GENERAL_CATEGORY_NAME
     ) = doAfterInitializationCheck {
-        val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
+        uiScope.launch {
+            val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
 
-        logRepository.insertLogEntry(
-            categoryId = categoryId,
-            message = message,
-            tag = tag
-        )
+            logRepository.insertLogEntry(
+                categoryId = categoryId,
+                message = message,
+                tag = tag
+            )
+        }
     }
 
     fun getRepository(): LogRepository = doAfterInitializationCheck { logRepository }
