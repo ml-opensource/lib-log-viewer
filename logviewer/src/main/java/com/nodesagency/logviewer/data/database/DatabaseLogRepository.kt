@@ -1,6 +1,7 @@
 package com.nodesagency.logviewer.data.database
 
 import android.content.Context
+import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
@@ -10,16 +11,10 @@ internal class DatabaseLogRepository(
     private val database: LogDatabase = LogDatabase.createDefault(context)
 ) : LogRepository {
 
-    override fun getAllCategoriesAlphabeticallySorted(): List<Category> {
+    override fun getAllCategoriesAlphabeticallySorted(): DataSource.Factory<Int, Category> {
         return database
             .categoryDao()
-            .getAllAlphabeticallySorted()
-    }
-
-    override fun getAlphabeticallySortedCategories(skip: Long, limit: Long): List<Category> {
-        return database
-            .categoryDao()
-            .getAlphabeticallySorted(skip, limit)
+            .getAlphabeticallySortedCategories()
     }
 
     override fun put(category: Category): Long {

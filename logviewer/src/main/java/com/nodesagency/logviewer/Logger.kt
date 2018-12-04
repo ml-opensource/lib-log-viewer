@@ -15,7 +15,7 @@ object Logger {
 
     private var isInitialized = false
     private lateinit var logRepository: LogRepository
-    private val uiScope = CoroutineScope(Dispatchers.Default)
+    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     fun initialize(
         context: Context,
@@ -30,7 +30,7 @@ object Logger {
         tag: String? = null,
         categoryName: String = GENERAL_CATEGORY_NAME
     ) = doAfterInitializationCheck {
-        uiScope.launch {
+        ioScope.launch {
             val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
 
             logRepository.insertLogEntry(
@@ -41,7 +41,7 @@ object Logger {
         }
     }
 
-    fun getRepository(): LogRepository = doAfterInitializationCheck { logRepository }
+    internal fun getRepository(): LogRepository = doAfterInitializationCheck { logRepository }
 
     private fun <T> doAfterInitializationCheck(doAfter: () -> T): T {
         if (!isInitialized) {

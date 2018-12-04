@@ -1,14 +1,13 @@
 package com.nodesagency.logviewer.data
 
+import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
 
 
 interface LogRepository {
 
-    fun getAllCategoriesAlphabeticallySorted(): List<Category>
-
-    fun getAlphabeticallySortedCategories(skip: Long, limit: Long): List<Category>
+    fun getAllCategoriesAlphabeticallySorted(): DataSource.Factory<Int, Category>
 
     /**
      * Inserts a category if the ID is null or replaces it if the ID already exists.

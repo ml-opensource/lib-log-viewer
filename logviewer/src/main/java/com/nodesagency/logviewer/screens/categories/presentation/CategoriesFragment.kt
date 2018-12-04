@@ -5,19 +5,19 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
+import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
-import com.nodesagency.logviewer.data.model.Category
 
-class CategoriesFragment : Fragment(), CategoriesPresentation.View {
+class CategoriesFragment : Fragment() {
 
-    private lateinit var presenter: CategoriesPresentation.Presenter
     private lateinit var categoriesRecyclerView: RecyclerView
-    private lateinit var categoriesAdapter: RecyclerView.Adapter<*>
+    private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
-
-    private val dataset = mutableListOf<Category>()
+    private lateinit var categoriesViewModel: CategoriesViewModel
 
     companion object {
         fun newInstance() = CategoriesFragment().apply {
@@ -28,45 +28,27 @@ class CategoriesFragment : Fragment(), CategoriesPresentation.View {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        presenter = CategoriesPresenter(this)
+        layoutManager = LinearLayoutManager(context)
+        categoriesAdapter = CategoriesAdapter()
 
-        lifecycle.addObserver(presenter)
+        categoriesViewModel = ViewModelProviders
+            .of(this, CategoriesViewModelFactory(Logger.getRepository()))
+            .get(CategoriesViewModel::class.java)
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = LayoutInflater.from(context).inflate(R.layout.fragment_categories, container, false)
 
-        layoutManager = LinearLayoutManager(context)
-        categoriesAdapter = CategoriesAdapter(dataset)
-
-        categoriesRecyclerView = view.findViewById<RecyclerView>(R.id.categoriesRecyclerView).apply {
-            setHasFixedSize(true)
-            layoutManager = layoutManager
-            adapter = categoriesAdapter
-        }
+        categoriesRecyclerView = view.findViewById<RecyclerView>(R.id.categoriesRecyclerView)
+        categoriesRecyclerView.adapter = categoriesAdapter
+        categoriesRecyclerView.layoutManager = layoutManager
 
         return view
     }
 
-    override fun onDestroy() {
-        super.onDestroy()
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
 
-        lifecycle.removeObserver(presenter)
-    }
-
-    override fun showLoadingAtTheEndOfList() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showGeneralLoading() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
-    }
-
-    override fun showAddedCategories(categories: List<Category>) {
-        dataset.addAll(categories)
-    }
-
-    override fun hideLoading() {
-//        TODO("not implemented") //To change body of created functions use File | Settings | File Templates.
+        categoriesViewModel.categoryList.observe(this, Observer(categoriesAdapter::submitList))
     }
 }

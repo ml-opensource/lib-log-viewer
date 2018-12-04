@@ -3,7 +3,6 @@ package com.nodesagency.logviewer.screens.common
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleObserver
 import androidx.lifecycle.OnLifecycleEvent
-import com.nodesagency.logviewer.data.model.Category
 
 internal interface Presentation {
 
@@ -22,16 +21,6 @@ internal interface Presentation {
         }
     }
 
-    interface View {
-
-        fun showLoadingAtTheEndOfList()
-
-        fun showGeneralLoading()
-
-        fun showAddedCategories(categories: List<Category>)
-
-        fun hideLoading()
-
-    }
+    interface View
 
 }

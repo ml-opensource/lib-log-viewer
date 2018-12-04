@@ -9,10 +9,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.R
 import com.nodesagency.logviewer.data.model.Category
 
-class CategoriesAdapter(
-    private val dataset: List<Category>
-) : PagedListAdapter<Category, CategoriesAdapter.ViewHolder>(DiffCallback()) {
-
+class CategoriesAdapter : PagedListAdapter<Category, CategoriesAdapter.ViewHolder>(DiffCallback()) {
     class ViewHolder(val nameTextView: TextView) : RecyclerView.ViewHolder(nameTextView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
@@ -25,13 +22,14 @@ class CategoriesAdapter(
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        holder.nameTextView.text = dataset[position].name
-    }
+        val category = getItem(position)
 
+        holder.nameTextView.text = category?.name ?: ""
+    }
 }
 
 private class DiffCallback : DiffUtil.ItemCallback<Category>() {
-    override fun areItemsTheSame(oldItem: Category, newItem: Category) = oldItem == newItem
+    override fun areItemsTheSame(oldItem: Category, newItem: Category) = oldItem.id == newItem.id
 
     override fun areContentsTheSame(oldItem: Category, newItem: Category) = oldItem == newItem
 }

@@ -1,5 +1,6 @@
 package com.nodesagency.logviewer.data.database.daos
 
+import androidx.paging.DataSource
 import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
@@ -13,7 +14,7 @@ internal interface CategoryDao {
     fun insert(category: Category): Long
 
     @Query("SELECT * FROM Categories ORDER BY name ASC")
-    fun getAllAlphabeticallySorted(): List<Category>
+    fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category>
 
     @Query("SELECT * FROM Categories WHERE name = :name LIMIT 1")
     fun getCategoryWithName(name: String): Category?
