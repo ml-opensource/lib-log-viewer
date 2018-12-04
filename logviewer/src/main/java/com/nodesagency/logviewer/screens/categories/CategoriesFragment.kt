@@ -1,5 +1,6 @@
 package com.nodesagency.logviewer.screens.categories
 
+import android.content.Context
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -14,13 +15,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
 
-
-class CategoriesFragment : Fragment() {
+internal class CategoriesFragment : Fragment() {
 
     private lateinit var categoriesRecyclerView: RecyclerView
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var categoriesViewModel: CategoriesViewModel
+    private lateinit var onCategorySelectListener: OnCategorySelectListener
 
     companion object {
         fun newInstance() = CategoriesFragment().apply {
@@ -28,11 +29,15 @@ class CategoriesFragment : Fragment() {
         }
     }
 
+    override fun onAttach(context: Context) {
+        super.onAttach(context)
+
+        onCategorySelectListener = context as? OnCategorySelectListener
+                ?: throw ClassCastException("Context must implement OnCategorySelectListener.")
+    }
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
-        layoutManager = LinearLayoutManager(context)
-        categoriesAdapter = CategoriesAdapter()
 
         categoriesViewModel = ViewModelProviders
             .of(this, CategoriesViewModelFactory(Logger.getRepository()))
@@ -45,6 +50,9 @@ class CategoriesFragment : Fragment() {
         categoriesRecyclerView = view.findViewById<RecyclerView>(R.id.categoriesRecyclerView)
         val dividerDecoration = DividerItemDecoration(inflater.context, VERTICAL)
 
+        layoutManager = LinearLayoutManager(context)
+        categoriesAdapter = CategoriesAdapter()
+
         categoriesRecyclerView.adapter = categoriesAdapter
         categoriesRecyclerView.layoutManager = layoutManager
         categoriesRecyclerView.addItemDecoration(dividerDecoration)
@@ -56,5 +64,11 @@ class CategoriesFragment : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         categoriesViewModel.categoryList.observe(this, Observer(categoriesAdapter::submitList))
+    }
+
+    override fun onResume() {
+        super.onResume()
+
+        categoriesAdapter.onCategorySelectListener = onCategorySelectListener
     }
 }

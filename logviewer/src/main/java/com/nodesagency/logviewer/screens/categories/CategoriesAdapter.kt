@@ -9,10 +9,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.R
 import com.nodesagency.logviewer.data.model.Category
 
-class CategoriesAdapter : PagedListAdapter<Category, CategoriesAdapter.ViewHolder>(
+
+internal class CategoriesAdapter : PagedListAdapter<Category, CategoriesAdapter.ViewHolder>(
     DiffCallback()
 ) {
-    class ViewHolder(val nameTextView: TextView) : RecyclerView.ViewHolder(nameTextView)
+
+    internal class ViewHolder(val nameTextView: TextView) : RecyclerView.ViewHolder(nameTextView)
+
+    var onCategorySelectListener: OnCategorySelectListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val textView = LayoutInflater
@@ -24,11 +28,20 @@ class CategoriesAdapter : PagedListAdapter<Category, CategoriesAdapter.ViewHolde
     }
 
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val category = getItem(position)
+        getItem(position)?.let {
+            holder.bind(it)
+        }
+    }
 
-        holder.nameTextView.text = category?.name ?: ""
+    private fun ViewHolder.bind(category: Category) {
+        nameTextView.text = category.name
+
+        nameTextView.setOnClickListener {
+            onCategorySelectListener?.onCategorySelected(category)
+        }
     }
 }
+
 
 private class DiffCallback : DiffUtil.ItemCallback<Category>() {
     override fun areItemsTheSame(oldItem: Category, newItem: Category) = oldItem.id == newItem.id

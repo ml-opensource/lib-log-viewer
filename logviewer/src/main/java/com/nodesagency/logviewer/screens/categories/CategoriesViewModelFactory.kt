@@ -4,7 +4,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.nodesagency.logviewer.data.LogRepository
 
-class CategoriesViewModelFactory(
+internal class CategoriesViewModelFactory(
     private val logRepository: LogRepository
 ) : ViewModelProvider.Factory {
 

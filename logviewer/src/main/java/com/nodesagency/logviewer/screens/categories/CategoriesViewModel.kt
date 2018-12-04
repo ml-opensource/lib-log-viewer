@@ -9,7 +9,7 @@ import com.nodesagency.logviewer.data.model.Category
 
 private const val PAGE_SIZE = 20
 
-class CategoriesViewModel(
+internal class CategoriesViewModel(
     logRepository: LogRepository
 ) : ViewModel() {
 
