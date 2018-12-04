@@ -1,6 +1,7 @@
 package com.nodesagency.logviewer
 
 import android.content.Context
+import androidx.annotation.VisibleForTesting
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.database.DatabaseLogRepository
 import com.nodesagency.logviewer.data.model.Category
@@ -21,6 +22,12 @@ object Logger {
         context: Context,
         logRepository: LogRepository = createDefaultLogRepository(context)
     ) {
+        if (isInitialized) {
+            throw IllegalStateException(
+                "It seems that Logger has already been initialized somewhere else. You cannot call initialize() twice."
+            )
+        }
+
         this.logRepository = logRepository
         this.isInitialized = true
     }
@@ -42,6 +49,14 @@ object Logger {
     }
 
     internal fun getRepository(): LogRepository = doAfterInitializationCheck { logRepository }
+
+    /**
+     * WARNING: Do not use, only for testing!
+     */
+    @VisibleForTesting(otherwise = VisibleForTesting.PRIVATE)
+    internal fun deinitialize() {
+        isInitialized = false
+    }
 
     private fun <T> doAfterInitializationCheck(doAfter: () -> T): T {
         if (!isInitialized) {
