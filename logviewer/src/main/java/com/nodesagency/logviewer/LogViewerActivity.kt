@@ -16,6 +16,8 @@ class LogViewerActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_log_viewer)
 
+        title = getString(R.string.title_log_categories)
+
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentContainer, CategoriesFragment.newInstance())
