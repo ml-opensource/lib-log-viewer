@@ -15,8 +15,5 @@ class CategoriesViewModel(
 
     private val categoriesDataSource = logRepository.getAllCategoriesAlphabeticallySorted()
 
-    val categoryList: LiveData<PagedList<Category>> = LivePagedListBuilder(categoriesDataSource,
-        PAGE_SIZE
-    ).build()
-
+    val categoryList: LiveData<PagedList<Category>> = LivePagedListBuilder(categoriesDataSource, PAGE_SIZE).build()
 }
