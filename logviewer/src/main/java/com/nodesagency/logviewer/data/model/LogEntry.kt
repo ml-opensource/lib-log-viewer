@@ -18,6 +18,7 @@ import androidx.room.PrimaryKey
 )
 data class LogEntry(
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
+    val timestampMilliseconds: Long = System.currentTimeMillis(),
     val categoryId: Long? = null,
     val message: String,
     val tag: String? = null
