@@ -1,4 +1,4 @@
-package com.nodesagency.logviewer.screens.categories.presentation
+package com.nodesagency.logviewer.screens.categories
 
 import android.os.Bundle
 import android.view.LayoutInflater

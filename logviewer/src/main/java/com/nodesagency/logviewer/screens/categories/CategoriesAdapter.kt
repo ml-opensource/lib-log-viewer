@@ -1,4 +1,4 @@
-package com.nodesagency.logviewer.screens.categories.presentation
+package com.nodesagency.logviewer.screens.categories
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -9,7 +9,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.R
 import com.nodesagency.logviewer.data.model.Category
 
-class CategoriesAdapter : PagedListAdapter<Category, CategoriesAdapter.ViewHolder>(DiffCallback()) {
+class CategoriesAdapter : PagedListAdapter<Category, CategoriesAdapter.ViewHolder>(
+    DiffCallback()
+) {
     class ViewHolder(val nameTextView: TextView) : RecyclerView.ViewHolder(nameTextView)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {

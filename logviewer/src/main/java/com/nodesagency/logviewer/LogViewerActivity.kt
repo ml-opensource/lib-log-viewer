@@ -4,7 +4,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Bundle
 import androidx.appcompat.app.AppCompatActivity
-import com.nodesagency.logviewer.screens.categories.presentation.CategoriesFragment
+import com.nodesagency.logviewer.screens.categories.CategoriesFragment
 
 class LogViewerActivity : AppCompatActivity() {
 

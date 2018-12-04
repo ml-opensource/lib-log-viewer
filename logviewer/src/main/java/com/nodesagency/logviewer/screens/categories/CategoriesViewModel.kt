@@ -1,4 +1,4 @@
-package com.nodesagency.logviewer.screens.categories.presentation
+package com.nodesagency.logviewer.screens.categories
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.ViewModel
@@ -15,6 +15,8 @@ class CategoriesViewModel(
 
     private val categoriesDataSource = logRepository.getAllCategoriesAlphabeticallySorted()
 
-    val categoryList: LiveData<PagedList<Category>> = LivePagedListBuilder(categoriesDataSource, PAGE_SIZE).build()
+    val categoryList: LiveData<PagedList<Category>> = LivePagedListBuilder(categoriesDataSource,
+        PAGE_SIZE
+    ).build()
 
 }
