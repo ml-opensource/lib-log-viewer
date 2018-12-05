@@ -125,7 +125,6 @@ fun Logger.w(
     throwable = throwable
 )
 
-
 /**
  * Stores a new log entry with the WTF severity level. The function is executed asynchronously, so if you'd like to
  * view the logs after the logging operation is done, you can use the [kotlinx.coroutines.Job] object to wait for the
