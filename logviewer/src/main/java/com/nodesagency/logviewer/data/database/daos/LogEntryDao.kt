@@ -11,7 +11,7 @@ internal interface LogEntryDao {
     @Query("SELECT * FROM LogEntries WHERE categoryId = :categoryId")
     fun getLogEntriesForCategory(categoryId: Long): List<LogEntry>
 
-    @Insert()
+    @Insert
     fun insert(entry: LogEntry)
 
 }

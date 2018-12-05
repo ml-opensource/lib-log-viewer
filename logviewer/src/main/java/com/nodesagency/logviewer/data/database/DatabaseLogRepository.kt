@@ -5,6 +5,7 @@ import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
+import com.nodesagency.logviewer.data.model.Severity
 
 internal class DatabaseLogRepository(
     private val context: Context,
@@ -23,28 +24,36 @@ internal class DatabaseLogRepository(
             .insert(category)
     }
 
-    override fun getLogEntriesForCategory(categoryId: Long): List<LogEntry> {
+
+    override fun put(severity: Severity): Long {
+        return database
+            .severityDao()
+            .insert(severity)
+    }
+
+    override fun put(logEntry: LogEntry) {
+        database
+            .logEntryDao()
+            .insert(logEntry)
+    }
+
+    override fun getLogEntriesForCategoryId(categoryId: Long): List<LogEntry> {
         return database
             .logEntryDao()
             .getLogEntriesForCategory(categoryId)
-    }
-
-    override fun insertLogEntry(categoryId: Long, tag: String?, message: String) {
-        val logEntryEntity = LogEntry(
-            categoryId = categoryId,
-            tag = tag,
-            message = message
-        )
-
-        database
-            .logEntryDao()
-            .insert(logEntryEntity)
     }
 
     override fun getIdForCategoryName(name: String): Long? {
         return database
             .categoryDao()
             .getCategoryWithName(name)
+            ?.id
+    }
+
+    override fun getIdForSeverityLevel(severityLevel: String): Long? {
+        return database
+            .severityDao()
+            .getSeverityWithLevel(severityLevel)
             ?.id
     }
 

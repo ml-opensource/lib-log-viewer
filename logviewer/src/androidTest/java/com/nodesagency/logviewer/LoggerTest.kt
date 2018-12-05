@@ -48,17 +48,34 @@ class LoggerTest {
     }
 
     @Test
-    fun logs_with_general_category_name_if_one_is_not_provided() = runBlocking {
+    fun logs_with_general_category_name_by_default() = runBlocking {
         val message = "A message"
+        val nonexistentIdException = IllegalStateException("General ID doesn't exist")
+
         Logger.log(message).join() // log() is run asynchronously, so we use join() to wait for it to finish
 
-        val id = logRepository.getIdForCategoryName("General") ?: throw IllegalStateException("General ID doesn't exist")
-        val categories = logRepository.getLogEntriesForCategory(id)
-        val generalLogEntries = logRepository.getLogEntriesForCategory(categoryId = GENERAL_CATEGORY_ID)
+        val id = logRepository.getIdForCategoryName(GENERAL_CATEGORY_NAME) ?: throw nonexistentIdException
+        val logEntriesForFoundId = logRepository.getLogEntriesForCategoryId(id)
+        val generalLogEntries = logRepository.getLogEntriesForCategoryId(GENERAL_CATEGORY_ID)
 
-        assertEquals(1, categories.size)
+        assertEquals(1, logEntriesForFoundId.size)
         assertEquals(1, generalLogEntries.size)
         assertEquals(message, generalLogEntries[0].message)
+    }
+
+    @Test
+    fun logs_with_verbose_severity_by_default() = runBlocking {
+        val message = "A message"
+        val verboseSeverity = CommonSeverityLevels.VERBOSE.severity
+        val nonexistentSeverityException = IllegalStateException("'Verbose' doesn't exist in DB")
+
+        Logger.log(message).join() // log() is run asynchronously, so we use join() to wait for it to finish
+
+        val id = logRepository.getIdForSeverityLevel(verboseSeverity.level) ?: throw nonexistentSeverityException
+        val logEntries = logRepository.getLogEntriesForCategoryId(GENERAL_CATEGORY_ID)
+
+        assertEquals(1, logEntries.size)
+        assertEquals(verboseSeverity.id, logEntries[0].severityId)
     }
 
     private fun runDeinitialized(run: () -> Unit) {

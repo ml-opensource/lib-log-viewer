@@ -14,12 +14,22 @@ import androidx.room.PrimaryKey
         parentColumns = ["id"],
         childColumns = ["categoryId"],
         onDelete = ForeignKey.CASCADE
+    ), ForeignKey(
+        entity = Severity::class,
+        parentColumns = ["id"],
+        childColumns = ["severityId"],
+        onDelete = ForeignKey.CASCADE
     )]
 )
 data class LogEntry(
+    /**
+     * Generally you don't want to set the ID yourself, as it might have unforeseen consequences.
+     */
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    val timestampMilliseconds: Long = System.currentTimeMillis(),
+    val timestampMilliseconds: Long,
     val categoryId: Long? = null,
+    val severityId: Long,
     val message: String,
+    val stackTrace: String?,
     val tag: String? = null
 )

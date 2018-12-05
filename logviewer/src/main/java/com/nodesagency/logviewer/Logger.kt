@@ -2,49 +2,84 @@ package com.nodesagency.logviewer
 
 import android.content.Context
 import androidx.annotation.VisibleForTesting
+import com.nodesagency.logviewer.concurrency.CoroutineScopeProvider
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.database.DatabaseLogRepository
 import com.nodesagency.logviewer.data.model.Category
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
+import com.nodesagency.logviewer.data.model.LogEntry
+import com.nodesagency.logviewer.data.model.Severity
+import com.nodesagency.logviewer.domain.RepositoryInitializer
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.runBlocking
+import java.io.PrintWriter
+import java.io.StringWriter
 
 internal const val GENERAL_CATEGORY_ID = 0L
 internal const val GENERAL_CATEGORY_NAME = "General"
+
 
 object Logger {
 
     private var isInitialized = false
     private lateinit var logRepository: LogRepository
-    private val ioScope = CoroutineScope(Dispatchers.IO)
 
     fun initialize(
         context: Context,
         logRepository: LogRepository = createDefaultLogRepository(context)
-    ) {
+    ) = runBlocking {
         if (isInitialized) {
             throw IllegalStateException(
                 "It seems that Logger has already been initialized somewhere else. You cannot call initialize() twice."
             )
         }
 
-        this.logRepository = logRepository
-        this.isInitialized = true
+        this@Logger.logRepository = logRepository
+
+        val repositoryInitializationJob = RepositoryInitializer(Logger.logRepository).initialize()
+
+        repositoryInitializationJob.join()
+
+        if (!repositoryInitializationJob.isCancelled) {
+            isInitialized = true
+        }
     }
 
+    /**
+     * Stores a new log entry. The function is executed asynchronously, so if you'd like to view the logs after the
+     * logging operation is done, you can use the [kotlinx.coroutines.Job] object to wait for the execution to finish.
+     *
+     * @param message the message to log
+     * @param severityLevel the severity of the logged event, e.g. "Info", "Error" etc. Also see [CommonSeverityLevels]
+     * @param tag the regular log tag
+     * @param categoryName the name of the category this log is grouped under, or [GENERAL_CATEGORY_NAME] if not provided
+     * @param throwable the optional throwable object to display the stack-trace from
+     *
+     * @return the job started to store the log
+     */
     fun log(
         message: String,
+        severityLevel: String = CommonSeverityLevels.VERBOSE.severity.level,
         tag: String? = null,
-        categoryName: String = GENERAL_CATEGORY_NAME
+        categoryName: String = GENERAL_CATEGORY_NAME,
+        throwable: Throwable? = null
     ) = doAfterInitializationCheck {
-        ioScope.launch {
-            val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
+        CoroutineScopeProvider.ioScope.launch {
 
-            logRepository.insertLogEntry(
+            val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
+            val severityId = logRepository.getIdForSeverityLevel(severityLevel) ?: insertNewSeverity(severityLevel)
+
+            val logEntry = LogEntry(
                 categoryId = categoryId,
+                severityId = severityId,
                 message = message,
-                tag = tag
+                stackTrace = throwable?.getStackTraceAsString(),
+                tag = tag,
+                timestampMilliseconds = System.currentTimeMillis()
             )
+
+            // TODO: Notify features about the new log entry
+
+            logRepository.put(logEntry)
         }
     }
 
@@ -81,7 +116,19 @@ object Logger {
         }
     }
 
-    private fun createDefaultLogRepository(context: Context): LogRepository {
-        return DatabaseLogRepository(context)
+    private fun insertNewSeverity(severityLevel: String): Long {
+        if (severityLevel.isBlank()) {
+            throw IllegalArgumentException("The severity level shouldn't be blank")
+        }
+
+        return logRepository.put(Severity(level = severityLevel))
     }
+
+    private fun createDefaultLogRepository(context: Context): LogRepository = DatabaseLogRepository(context)
+}
+
+private fun Throwable.getStackTraceAsString(): String {
+    return StringWriter()
+        .apply { printStackTrace(PrintWriter(this)) }
+        .toString()
 }
