@@ -74,7 +74,7 @@ object Logger {
                 )
             }
 
-            job.join() // Assures the jobs are stored in calling order
+            job.join() // Assures the logs are stored in calling order
 
             return@runBlocking job
         }
