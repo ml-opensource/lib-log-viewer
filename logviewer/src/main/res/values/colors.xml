@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="severity_gray">#f2f2f2</color>
+    <color name="severity_blue">#e6f5ff</color>
+    <color name="severity_green">#e6ffe6</color>
+    <color name="severity_yellow">#ffffe6</color>
+    <color name="severity_red">#ffe6e6</color>
+    <color name="severity_dark_red">#ffcccc</color>
+</resources>
