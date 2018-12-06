@@ -26,7 +26,7 @@ class LogViewerActivity : AppCompatActivity(), OnCategorySelectListener {
 
         supportFragmentManager
             .beginTransaction()
-            .replace(R.id.fragmentContainer, CategoriesFragment.newInstance(), FRAGMENT_CATEGORIES)
+            .replace(R.id.fragmentContainerView, CategoriesFragment.newInstance(), FRAGMENT_CATEGORIES)
             .commit()
     }
 
@@ -37,7 +37,7 @@ class LogViewerActivity : AppCompatActivity(), OnCategorySelectListener {
                 supportFragmentManager.findFragmentByTag(FRAGMENT_CATEGORIES)?.let(::hide)
             }
             .addToBackStack(null)
-            .add(R.id.fragmentContainer, LogFragment.newInstance(category))
+            .add(R.id.fragmentContainerView, LogFragment.newInstance(category))
             .commit()
     }
 }

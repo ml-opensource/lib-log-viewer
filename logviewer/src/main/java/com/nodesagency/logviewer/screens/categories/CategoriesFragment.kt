@@ -47,7 +47,7 @@ internal class CategoriesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
 
-        categoriesRecyclerView = view.findViewById<RecyclerView>(R.id.categoriesRecyclerView)
+        categoriesRecyclerView = view.findViewById<RecyclerView>(R.id.categoriesView)
         val dividerDecoration = DividerItemDecoration(inflater.context, VERTICAL)
 
         layoutManager = LinearLayoutManager(context)
