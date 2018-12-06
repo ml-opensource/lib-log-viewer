@@ -5,5 +5,6 @@
     <color name="severity_green">#e6ffe6</color>
     <color name="severity_yellow">#ffffe6</color>
     <color name="severity_red">#ffe6e6</color>
-    <color name="severity_dark_red">#ffcccc</color>
+    <color name="severity_dark_red">#ffb3b3</color>
+    <color name="severity_darkest_red">#ff8080</color>
 </resources>

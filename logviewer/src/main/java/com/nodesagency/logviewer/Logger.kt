@@ -63,24 +63,45 @@ object Logger {
         categoryName: String = GENERAL_CATEGORY_NAME,
         throwable: Throwable? = null
     ) = doAfterInitializationCheck {
-        CoroutineScopeProvider.ioScope.launch {
+        runBlocking {
+            val job = CoroutineScopeProvider.ioScope.launch {
+                storeLog(
+                    categoryName = categoryName,
+                    severityLevel = severityLevel,
+                    message = message,
+                    throwable = throwable,
+                    tag = tag
+                )
+            }
 
-            val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
-            val severityId = logRepository.getIdForSeverityLevel(severityLevel) ?: insertNewSeverity(severityLevel)
+            job.join() // Assures the jobs are stored in calling order
 
-            val logEntry = LogEntry(
-                categoryId = categoryId,
-                severityId = severityId,
-                message = message,
-                stackTrace = throwable?.getStackTraceAsString(),
-                tag = tag,
-                timestampMilliseconds = System.currentTimeMillis()
-            )
-
-            // TODO: Notify features about the new log entry
-
-            logRepository.put(logEntry)
+            return@runBlocking job
         }
+    }
+
+    private fun storeLog(
+        categoryName: String,
+        severityLevel: String,
+        message: String,
+        throwable: Throwable?,
+        tag: String?
+    ) {
+        val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
+        val severityId = logRepository.getIdForSeverityLevel(severityLevel) ?: insertNewSeverity(severityLevel)
+
+        val logEntry = LogEntry(
+            categoryId = categoryId,
+            severityId = severityId,
+            message = message,
+            stackTrace = throwable?.getStackTraceAsString(),
+            tag = tag,
+            timestampMilliseconds = System.currentTimeMillis()
+        )
+
+        // TODO: Notify features about the new log entry
+
+        logRepository.put(logEntry)
     }
 
     internal fun getRepository(): LogRepository = doAfterInitializationCheck { logRepository }

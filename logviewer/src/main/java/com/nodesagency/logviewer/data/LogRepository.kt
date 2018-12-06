@@ -8,7 +8,9 @@ import com.nodesagency.logviewer.data.model.Severity
 
 interface LogRepository {
 
-    fun getAllCategoriesAlphabeticallySorted(): DataSource.Factory<Int, Category>
+    fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category>
+
+    fun getChronologicallySortedLogEntries(categoryId: Long): DataSource.Factory<Int, LogEntry>
 
     /**
      * Inserts a category if the ID is null or replaces it if the ID already exists.

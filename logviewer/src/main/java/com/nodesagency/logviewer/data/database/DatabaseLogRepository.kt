@@ -12,10 +12,16 @@ internal class DatabaseLogRepository(
     private val database: LogDatabase = LogDatabase.createDefault(context)
 ) : LogRepository {
 
-    override fun getAllCategoriesAlphabeticallySorted(): DataSource.Factory<Int, Category> {
+    override fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category> {
         return database
             .categoryDao()
             .getAlphabeticallySortedCategories()
+    }
+
+    override fun getChronologicallySortedLogEntries(categoryId: Long): DataSource.Factory<Int, LogEntry> {
+        return database
+            .logEntryDao()
+            .getChronologicallySortedLogEntries(categoryId)
     }
 
     override fun put(category: Category): Long {
@@ -40,7 +46,7 @@ internal class DatabaseLogRepository(
     override fun getLogEntriesForCategoryId(categoryId: Long): List<LogEntry> {
         return database
             .logEntryDao()
-            .getLogEntriesForCategory(categoryId)
+            .getAllLogEntries(categoryId)
     }
 
     override fun getIdForCategoryName(name: String): Long? {

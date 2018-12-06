@@ -7,25 +7,25 @@ import android.widget.LinearLayout
 import android.widget.TextView
 import com.nodesagency.logviewer.R
 
-class LogItemView @JvmOverloads constructor(
+internal class LogItemView @JvmOverloads constructor(
     context: Context,
-    attributes: AttributeSet? = null
-) : LinearLayout(context, attributes) {
+    attrs: AttributeSet? = null
+) : LinearLayout(context, attrs) {
 
     private val lineNumberView: TextView
     private val tagView: TextView
     private val messageView: TextView
 
-    var lineNumber: String
-        get() = lineNumberView.text.toString()
+    var lineNumber: Int
+        get() = lineNumberView.text.toString().toInt()
         set(value) {
-            lineNumberView.text = value
+            lineNumberView.text = value.toString()
         }
 
-    var tag: String
+    var tag: String?
         get() = tagView.text.toString()
         set(value) {
-            tagView.text = value
+            tagView.text = value ?: ""
         }
 
     var message: String

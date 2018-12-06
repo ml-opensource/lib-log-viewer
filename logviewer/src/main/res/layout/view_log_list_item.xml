@@ -2,9 +2,9 @@
 <merge xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    tools:parentTag="android.widget.LinearLayout"
-    android:orientation="horizontal">
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
 
     <TextView
         android:id="@+id/lineNumberView"
@@ -27,8 +27,9 @@
         android:layout_marginStart="@dimen/log_list_item_padding"
         android:layout_weight="1"
         android:ellipsize="end"
-        android:gravity="center_vertical|end"
-        android:textSize="12sp"
+        android:gravity="center_vertical|center"
+        android:textSize="10sp"
+        android:textStyle="italic|bold"
         android:typeface="monospace" />
 
     <TextView

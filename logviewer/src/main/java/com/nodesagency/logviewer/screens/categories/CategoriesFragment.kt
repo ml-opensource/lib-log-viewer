@@ -53,8 +53,8 @@ internal class CategoriesFragment : Fragment() {
         layoutManager = LinearLayoutManager(context)
         categoriesAdapter = CategoriesAdapter()
 
-        categoriesRecyclerView.adapter = categoriesAdapter
         categoriesRecyclerView.layoutManager = layoutManager
+        categoriesRecyclerView.adapter = categoriesAdapter
         categoriesRecyclerView.addItemDecoration(dividerDecoration)
 
         return view
@@ -63,7 +63,9 @@ internal class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoriesViewModel.categoryList.observe(this, Observer(categoriesAdapter::submitList))
+        categoriesViewModel
+            .categoryList
+            .observe(this, Observer(categoriesAdapter::submitList))
     }
 
     override fun onResume() {
