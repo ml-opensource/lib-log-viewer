@@ -2,14 +2,16 @@ package com.nodesagency.logviewer.data.model
 
 import android.os.Parcel
 import android.os.Parcelable
-import androidx.room.ColumnInfo
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "Categories")
 data class Category(
+    /**
+     * Generally you don't want to set the ID yourself, as it might have unforeseen consequences.
+     */
     @PrimaryKey(autoGenerate = true) val id: Long? = null,
-    @ColumnInfo(name = "name") val name: String
+    val name: String
 ) : Parcelable {
 
     constructor(parcel: Parcel) : this(

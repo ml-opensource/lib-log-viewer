@@ -7,6 +7,7 @@ import androidx.room.Room
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.database.DatabaseLogRepository
 import com.nodesagency.logviewer.data.database.LogDatabase
+import com.nodesagency.logviewer.data.model.Severity
 import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.runBlocking
 import org.junit.After
@@ -33,7 +34,7 @@ class LoggerTest {
     @After
     fun tearDown() {
         Logger.deinitialize()
-        logRepository.clear()
+        logRepository.deleteAllCategoriesAndLogs()
     }
 
     @Test(expected = IllegalStateException::class)
@@ -48,17 +49,64 @@ class LoggerTest {
     }
 
     @Test
-    fun logs_with_general_category_name_if_one_is_not_provided() = runBlocking {
+    fun logs_with_general_category_name_by_default() = runBlocking {
         val message = "A message"
+        val nonexistentIdException = IllegalStateException("General ID doesn't exist")
+
         Logger.log(message).join() // log() is run asynchronously, so we use join() to wait for it to finish
 
-        val id = logRepository.getIdForCategoryName("General") ?: throw IllegalStateException("General ID doesn't exist")
-        val categories = logRepository.getLogEntriesForCategory(id)
-        val generalLogEntries = logRepository.getLogEntriesForCategory(categoryId = GENERAL_CATEGORY_ID)
+        val id = logRepository.getIdForCategoryName(GENERAL_CATEGORY_NAME) ?: throw nonexistentIdException
+        val logEntriesForFoundId = logRepository.getLogEntriesForCategoryId(id)
+        val generalLogEntries = logRepository.getLogEntriesForCategoryId(GENERAL_CATEGORY_ID)
 
-        assertEquals(1, categories.size)
+        assertEquals(1, logEntriesForFoundId.size)
         assertEquals(1, generalLogEntries.size)
         assertEquals(message, generalLogEntries[0].message)
+    }
+
+    @Test
+    fun logs_with_verbose_severity_by_default() = runBlocking {
+        val message = "A message"
+        val verboseSeverity = CommonSeverityLevels.VERBOSE.severity
+        val nonexistentSeverityException = IllegalStateException("'Verbose' doesn't exist in DB")
+
+        Logger.log(message).join() // log() is run asynchronously, so we use join() to wait for it to finish
+
+        val id = logRepository.getIdForSeverityLevel(verboseSeverity.level) ?: throw nonexistentSeverityException
+        val logEntries = logRepository.getLogEntriesForCategoryId(GENERAL_CATEGORY_ID)
+
+        assertEquals(1, logEntries.size)
+        assertEquals(verboseSeverity.id, logEntries[0].severityId)
+    }
+
+    @Test
+    fun severity_extensions_store_proper_severities() = runBlocking {
+        data class MessageWithSeverity(val message: String, val severity: Severity)
+
+        val debug = MessageWithSeverity("Debug message", CommonSeverityLevels.DEBUG.severity)
+        val error = MessageWithSeverity("Error message", CommonSeverityLevels.ERROR.severity)
+        val info = MessageWithSeverity("Info message", CommonSeverityLevels.INFO.severity)
+        val verbose = MessageWithSeverity("Verbose message", CommonSeverityLevels.VERBOSE.severity)
+        val warning = MessageWithSeverity("Warning message", CommonSeverityLevels.WARNING.severity)
+        val wtf = MessageWithSeverity("WTF message", CommonSeverityLevels.WTF.severity)
+
+        Logger.apply {
+            d(debug.message).join()
+            e(error.message).join()
+            i(info.message).join()
+            v(verbose.message).join()
+            w(warning.message).join()
+            wtf(wtf.message).join()
+        }
+
+        val messages = logRepository.getLogEntriesForCategoryId(GENERAL_CATEGORY_ID)
+
+        assertEquals(debug.severity.id, messages[0].severityId)
+        assertEquals(error.severity.id, messages[1].severityId)
+        assertEquals(info.severity.id, messages[2].severityId)
+        assertEquals(verbose.severity.id, messages[3].severityId)
+        assertEquals(warning.severity.id, messages[4].severityId)
+        assertEquals(wtf.severity.id, messages[5].severityId)
     }
 
     private fun runDeinitialized(run: () -> Unit) {

@@ -5,16 +5,23 @@ import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
+import com.nodesagency.logviewer.data.model.Severity
 
 internal class DatabaseLogRepository(
     private val context: Context,
     private val database: LogDatabase = LogDatabase.createDefault(context)
 ) : LogRepository {
 
-    override fun getAllCategoriesAlphabeticallySorted(): DataSource.Factory<Int, Category> {
+    override fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category> {
         return database
             .categoryDao()
             .getAlphabeticallySortedCategories()
+    }
+
+    override fun getChronologicallySortedLogEntries(categoryId: Long): DataSource.Factory<Int, LogEntry> {
+        return database
+            .logEntryDao()
+            .getChronologicallySortedLogEntries(categoryId)
     }
 
     override fun put(category: Category): Long {
@@ -23,22 +30,23 @@ internal class DatabaseLogRepository(
             .insert(category)
     }
 
-    override fun getLogEntriesForCategory(categoryId: Long): List<LogEntry> {
+
+    override fun put(severity: Severity): Long {
         return database
-            .logEntryDao()
-            .getLogEntriesForCategory(categoryId)
+            .severityDao()
+            .insert(severity)
     }
 
-    override fun insertLogEntry(categoryId: Long, tag: String?, message: String) {
-        val logEntryEntity = LogEntry(
-            categoryId = categoryId,
-            tag = tag,
-            message = message
-        )
-
+    override fun put(logEntry: LogEntry) {
         database
             .logEntryDao()
-            .insert(logEntryEntity)
+            .insert(logEntry)
+    }
+
+    override fun getLogEntriesForCategoryId(categoryId: Long): List<LogEntry> {
+        return database
+            .logEntryDao()
+            .getAllLogEntries(categoryId)
     }
 
     override fun getIdForCategoryName(name: String): Long? {
@@ -48,7 +56,16 @@ internal class DatabaseLogRepository(
             ?.id
     }
 
-    override fun clear() {
-        return database.clearAllTables()
+    override fun getIdForSeverityLevel(severityLevel: String): Long? {
+        return database
+            .severityDao()
+            .getSeverityWithLevel(severityLevel)
+            ?.id
+    }
+
+    override fun deleteAllCategoriesAndLogs() {
+        return database
+            .categoryDao()
+            .deleteAllCategories() // It's enough to delete the categories as they cascade-delete the logs too
     }
 }

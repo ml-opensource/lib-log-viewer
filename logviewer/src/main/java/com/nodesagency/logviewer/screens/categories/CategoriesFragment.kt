@@ -47,14 +47,14 @@ internal class CategoriesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
 
-        categoriesRecyclerView = view.findViewById<RecyclerView>(R.id.categoriesRecyclerView)
+        categoriesRecyclerView = view.findViewById<RecyclerView>(R.id.categoriesView)
         val dividerDecoration = DividerItemDecoration(inflater.context, VERTICAL)
 
         layoutManager = LinearLayoutManager(context)
         categoriesAdapter = CategoriesAdapter()
 
-        categoriesRecyclerView.adapter = categoriesAdapter
         categoriesRecyclerView.layoutManager = layoutManager
+        categoriesRecyclerView.adapter = categoriesAdapter
         categoriesRecyclerView.addItemDecoration(dividerDecoration)
 
         return view
@@ -63,7 +63,9 @@ internal class CategoriesFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        categoriesViewModel.categoryList.observe(this, Observer(categoriesAdapter::submitList))
+        categoriesViewModel
+            .categoryList
+            .observe(this, Observer(categoriesAdapter::submitList))
     }
 
     override fun onResume() {

@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<merge xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="horizontal"
+    tools:parentTag="android.widget.LinearLayout">
+
+    <TextView
+        android:id="@+id/lineNumberView"
+        android:layout_width="wrap_content"
+        android:layout_height="match_parent"
+        android:visibility="gone" />
+
+    <TextView
+        android:id="@+id/tagView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_weight="1"
+        android:background="@color/log_item_shaded_gray"
+        android:ellipsize="end"
+        android:gravity="center"
+        android:paddingStart="@dimen/log_list_item_padding"
+        android:paddingEnd="@dimen/log_list_item_padding"
+        android:textSize="10sp"
+        android:textStyle="italic|bold"
+        android:typeface="monospace"
+        tools:ignore="SmallSp" />
+
+    <TextView
+        android:id="@+id/messageView"
+        android:layout_width="0dp"
+        android:layout_height="match_parent"
+        android:layout_marginStart="@dimen/log_list_item_padding"
+        android:layout_marginEnd="@dimen/log_list_item_padding"
+        android:layout_weight="3"
+        android:ellipsize="end"
+        android:gravity="center_vertical"
+        android:lines="2"
+        android:text=""
+        android:textSize="12sp"
+        android:typeface="monospace" />
+
+</merge>

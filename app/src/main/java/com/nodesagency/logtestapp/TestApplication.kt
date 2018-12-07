@@ -11,5 +11,4 @@ class TestApplication : Application() {
         // Initialize the logger library here
         Logger.initialize(this)
     }
-
 }
