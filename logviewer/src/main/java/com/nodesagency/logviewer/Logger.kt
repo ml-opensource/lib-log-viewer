@@ -23,10 +23,20 @@ object Logger {
     private var isInitialized = false
     private lateinit var logRepository: LogRepository
 
+    /**
+     * Initializes the library. This has to be called before any logging. Usually you'll want to do this in your
+     * application's `onCreate()` method.
+     *
+     * @param context the context your [Logger] instance is initialized with. You'll probably want to use your
+     * application context here.
+     * @param logRepository if you want to use your custom log storage instead of the default one, this is where you can
+     * provide it
+     */
     fun initialize(
         context: Context,
         logRepository: LogRepository = createDefaultLogRepository(context)
     ) = runBlocking {
+
         if (isInitialized) {
             throw IllegalStateException(
                 "It seems that Logger has already been initialized somewhere else. You cannot call initialize() twice."
