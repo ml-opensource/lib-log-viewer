@@ -1,38 +1,51 @@
 package com.nodesagency.logtestapp
 
 import android.os.Bundle
+import android.view.View
 import androidx.appcompat.app.AppCompatActivity
-import com.nodesagency.logviewer.*
+import com.nodesagency.logviewer.LogViewerActivity
+import kotlinx.android.synthetic.main.activity_main.*
 
-class MainActivity : AppCompatActivity() {
+class MainActivity : AppCompatActivity(), View.OnClickListener {
+
+    private lateinit var logGenerator: LogGenerator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         setContentView(R.layout.activity_main)
 
-        // Insert a couple of sample logs...
+        logGenerator = LogGenerator(
+            logCount = 1000,
+            delayBetweenLogsMilliseconds = 1000,
+            undelayedInitialLogCount = 6
+        )
+    }
 
-        Logger.log("This is a verbose message")
-        Logger.e("This is an error message", tag = "MainActivity")
-        Logger.d("This is a debug message", tag = "MainActivity")
-        Logger.w("This is a warning message", tag = "MainActivity")
-        Logger.log("This is another verbose message")
-        Logger.log("This is a third verbose message")
-        Logger.i("This is an info message")
-        Logger.log(severityLevel = CommonSeverityLevels.ASSERT.severity.level, message =  "This is an assert message")
-        Logger.wtf("This is a WTF message")
+    override fun onResume() {
+        super.onResume()
 
-        Logger.i(categoryName = "Database write", message = "Writing to the database")
-        Logger.d(categoryName = "Network call", message = "Calling the network")
+        logGenerator.stop()
 
+        startButton.setOnClickListener(this)
+    }
 
-        // ...and run the LogViewerActivity
+    override fun onPause() {
+        super.onPause()
+
+        startButton.setOnClickListener(null)
+    }
+
+    override fun onClick(view: View) {
+        when (view.id) {
+            R.id.startButton -> startLogViewerActivityWithLiveLogging()
+        }
+    }
+
+    private fun startLogViewerActivityWithLiveLogging() {
+        logGenerator.start()
 
         LogViewerActivity
             .createIntent(this)
-            .let(::startActivity)
-
-        finish()
+            .let { startActivity(it) }
     }
 }
