@@ -9,6 +9,7 @@ import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
 import com.nodesagency.logviewer.domain.RepositoryInitializer
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.runBlocking
 import java.io.PrintWriter
@@ -35,7 +36,7 @@ object Logger {
     fun initialize(
         context: Context,
         logRepository: LogRepository = createDefaultLogRepository(context)
-    ) = runBlocking {
+    ): Unit = runBlocking {
 
         if (isInitialized) {
             throw IllegalStateException(
@@ -72,7 +73,7 @@ object Logger {
         tag: String? = null,
         categoryName: String = GENERAL_CATEGORY_NAME,
         throwable: Throwable? = null
-    ) = doAfterInitializationCheck {
+    ): Job = doAfterInitializationCheck {
         runBlocking {
             val job = CoroutineScopeProvider.ioScope.launch {
                 storeLog(
