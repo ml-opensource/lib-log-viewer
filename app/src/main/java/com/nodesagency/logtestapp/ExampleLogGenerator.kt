@@ -35,7 +35,8 @@ internal class ExampleLogGenerator(
                 Logger.log(
                     severityLevel = severityLevel,
                     message = generateMessage(logIndex, severityLevel),
-                    tag = generateTag()
+                    tag = generateTag(),
+                    categoryName = generateCategoryName()
                 )
 
                 if (logIndex >= undelayedInitialLogCount) {
@@ -56,6 +57,16 @@ internal class ExampleLogGenerator(
             "LoggedFragment",
             "TestTag",
             "YetAnotherTag"
+        ).random()
+    }
+
+    private fun generateCategoryName(): String {
+        return arrayOf(
+            "Calculations",
+            "General",
+            "Local I/O",
+            "Network calls",
+            "User profile"
         ).random()
     }
 
