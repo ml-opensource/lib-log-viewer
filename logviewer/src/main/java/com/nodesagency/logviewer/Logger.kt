@@ -25,8 +25,8 @@ object Logger {
     private lateinit var logRepository: LogRepository
 
     /**
-     * Initializes the library. This has to be called before any logging. Usually you'll want to do this in your
-     * application's `onCreate()` method.
+     * Initializes the library. This has to be called before any logging is performed. Usually you'll want to do this in
+     * your application's `onCreate()` method.
      *
      * @param context the context your [Logger] instance is initialized with. You'll probably want to use your
      * application context here.

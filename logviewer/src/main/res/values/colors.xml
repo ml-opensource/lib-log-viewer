@@ -7,4 +7,5 @@
     <color name="severity_red">#ffe6e6</color>
     <color name="severity_dark_red">#ffb3b3</color>
     <color name="severity_darkest_red">#ff8080</color>
+    <color name="log_item_shaded_gray">#08000000</color>
 </resources>
