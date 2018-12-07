@@ -8,13 +8,13 @@ import kotlinx.android.synthetic.main.activity_main.*
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var logGenerator: LogGenerator
+    private lateinit var exampleLogGenerator: ExampleLogGenerator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        logGenerator = LogGenerator(
+        exampleLogGenerator = ExampleLogGenerator(
             logCount = 1000,
             delayBetweenLogsMilliseconds = 1000,
             undelayedInitialLogCount = 6
@@ -24,7 +24,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
 
-        logGenerator.stop()
+        exampleLogGenerator.stop()
 
         startButton.setOnClickListener(this)
     }
@@ -42,7 +42,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun startLogViewerActivityWithLiveLogging() {
-        logGenerator.start()
+        exampleLogGenerator.start()
 
         LogViewerActivity
             .createIntent(this)

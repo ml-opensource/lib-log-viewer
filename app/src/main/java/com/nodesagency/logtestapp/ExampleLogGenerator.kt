@@ -6,7 +6,7 @@ import com.nodesagency.logviewer.data.model.Severity
 import kotlinx.coroutines.*
 import kotlin.random.Random
 
-internal class LogGenerator(
+internal class ExampleLogGenerator(
     private val logCount: Int,
     private val delayBetweenLogsMilliseconds: Long = 0L,
     private val undelayedInitialLogCount: Int = 0
