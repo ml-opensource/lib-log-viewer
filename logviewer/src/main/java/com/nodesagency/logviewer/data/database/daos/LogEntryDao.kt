@@ -17,4 +17,5 @@ internal interface LogEntryDao {
 
     @Insert
     fun insert(entry: LogEntry)
+
 }

@@ -24,6 +24,12 @@ class LogViewerActivity : AppCompatActivity(), OnCategorySelectListener {
 
         title = getString(R.string.title_log_categories)
 
+        if (savedInstanceState == null) {
+            showCategoriesFragment()
+        }
+    }
+
+    private fun showCategoriesFragment() {
         supportFragmentManager
             .beginTransaction()
             .replace(R.id.fragmentContainerView, CategoriesFragment.newInstance(), FRAGMENT_CATEGORIES)
