@@ -22,4 +22,7 @@ internal interface CategoryDao {
     @Query("SELECT * FROM Categories LIMIT :limit OFFSET :skip")
     fun getAlphabeticallySorted(skip: Long, limit: Long): List<Category>
 
+    @Query("DELETE FROM Categories")
+    fun deleteAllCategories()
+
 }

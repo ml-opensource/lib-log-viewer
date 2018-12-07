@@ -63,7 +63,9 @@ internal class DatabaseLogRepository(
             ?.id
     }
 
-    override fun clear() {
-        return database.clearAllTables()
+    override fun deleteAllCategoriesAndLogs() {
+        return database
+            .categoryDao()
+            .deleteAllCategories() // It's enough to delete the categories as they cascade-delete the logs too
     }
 }

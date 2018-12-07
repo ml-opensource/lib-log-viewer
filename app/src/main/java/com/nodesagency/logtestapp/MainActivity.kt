@@ -4,7 +4,9 @@ import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.nodesagency.logviewer.LogViewerActivity
+import com.nodesagency.logviewer.Logger
 import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
@@ -24,21 +26,27 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
 
-        exampleLogGenerator.stop()
+        exampleLogGenerator.stop() // Stop generating logs when the LogViewerActivity is stopped
 
-        startButton.setOnClickListener(this)
+        setAllButtonListener(this)
     }
 
     override fun onPause() {
         super.onPause()
 
-        startButton.setOnClickListener(null)
+        setAllButtonListener(null)
     }
 
     override fun onClick(view: View) {
         when (view.id) {
             R.id.startButton -> startLogViewerActivityWithLiveLogging()
+            R.id.clearAllLogsButton -> clearAllLogs()
         }
+    }
+
+    private fun setAllButtonListener(listener: View.OnClickListener?) {
+        startButton.setOnClickListener(listener)
+        clearAllLogsButton.setOnClickListener(listener)
     }
 
     private fun startLogViewerActivityWithLiveLogging() {
@@ -47,5 +55,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         LogViewerActivity
             .createIntent(this)
             .let { startActivity(it) }
+    }
+
+    private fun clearAllLogs() = runBlocking {
+        Logger.clearAllLogs().join()
     }
 }

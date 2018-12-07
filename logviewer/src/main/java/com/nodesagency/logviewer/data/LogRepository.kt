@@ -40,5 +40,5 @@ interface LogRepository {
      */
     fun getIdForSeverityLevel(severityLevel: String): Long?
 
-    fun clear()
+    fun deleteAllCategoriesAndLogs()
 }

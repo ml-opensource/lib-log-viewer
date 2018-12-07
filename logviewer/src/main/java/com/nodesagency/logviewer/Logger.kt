@@ -9,9 +9,7 @@ import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
 import com.nodesagency.logviewer.domain.RepositoryInitializer
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.*
 import java.io.PrintWriter
 import java.io.StringWriter
 
@@ -46,13 +44,13 @@ object Logger {
 
         this@Logger.logRepository = logRepository
 
-        val repositoryInitializationJob = RepositoryInitializer(Logger.logRepository).initialize()
+        joinInIoScope {
+            RepositoryInitializer(Logger.logRepository).initialize()
 
-        repositoryInitializationJob.join()
-
-        if (!repositoryInitializationJob.isCancelled) {
-            isInitialized = true
-        }
+            if (it.isActive) {
+                isInitialized = true
+            }
+        }.join()
     }
 
     /**
@@ -74,20 +72,39 @@ object Logger {
         categoryName: String = GENERAL_CATEGORY_NAME,
         throwable: Throwable? = null
     ): Job = doAfterInitializationCheck {
-        runBlocking {
+        joinInIoScope {
+            storeLog(
+                categoryName = categoryName,
+                severityLevel = severityLevel,
+                message = message,
+                throwable = throwable,
+                tag = tag
+            )
+        }
+    }
+
+    private fun joinInIoScope(runInIoScope: suspend (CoroutineScope) -> Unit): Job {
+        return runBlocking {
             val job = CoroutineScopeProvider.ioScope.launch {
-                storeLog(
-                    categoryName = categoryName,
-                    severityLevel = severityLevel,
-                    message = message,
-                    throwable = throwable,
-                    tag = tag
-                )
+                runInIoScope(this)
             }
 
             job.join() // Assures the logs are stored in calling order
 
-            return@runBlocking job
+            job
+        }
+    }
+
+    /**
+     * Deletes all logs. The function is executed asynchronously, so if you'd like to view the logs after the
+     * logging operation is done, you can use the returned [kotlinx.coroutines.Job] object to wait for the execution to
+     * finish.
+     *
+     * @return the job started to deleteAllCategoriesAndLogs all logs
+     */
+    fun clearAllLogs(): Job = doAfterInitializationCheck {
+        joinInIoScope {
+            logRepository.deleteAllCategoriesAndLogs()
         }
     }
 

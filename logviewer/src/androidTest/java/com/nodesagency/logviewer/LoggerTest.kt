@@ -34,7 +34,7 @@ class LoggerTest {
     @After
     fun tearDown() {
         Logger.deinitialize()
-        logRepository.clear()
+        logRepository.deleteAllCategoriesAndLogs()
     }
 
     @Test(expected = IllegalStateException::class)
