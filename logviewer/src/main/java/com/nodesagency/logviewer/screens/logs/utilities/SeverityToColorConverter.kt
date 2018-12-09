@@ -7,7 +7,7 @@ import androidx.annotation.ColorRes
 import com.nodesagency.logviewer.CommonSeverityLevels
 import com.nodesagency.logviewer.R
 
-class SeverityToColorConverter(private val resources: Resources) {
+internal class SeverityToColorConverter(private val resources: Resources) {
 
     @ColorInt
     fun getColorForSeverityId(severityId: Long): Int? = when (severityId) {
