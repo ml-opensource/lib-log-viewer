@@ -5,6 +5,7 @@
     android:fillViewport="true">
 
     <com.nodesagency.logviewer.screens.logdetails.views.LogDetailsView
+        android:id="@+id/logDetailsView"
         android:layout_width="match_parent"
         android:layout_height="wrap_content" />
 

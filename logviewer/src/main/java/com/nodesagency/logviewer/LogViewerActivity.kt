@@ -8,13 +8,19 @@ import androidx.fragment.app.FragmentManager
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.screens.categories.CategoriesFragment
 import com.nodesagency.logviewer.screens.categories.OnCategorySelectListener
-import com.nodesagency.logviewer.screens.logs.LogFragment
+import com.nodesagency.logviewer.screens.logdetails.LogDetailsFragment
+import com.nodesagency.logviewer.screens.logs.LogsFragment
+import com.nodesagency.logviewer.screens.logs.OnLogSelectListener
 
 private const val FRAGMENT_CATEGORIES = "categories"
 private const val FRAGMENT_LOGS = "logs"
+private const val FRAGMENT_LOG_DETAILS = "log_details"
 private const val STATE_TITLE = "state_title"
 
-class LogViewerActivity : AppCompatActivity(), OnCategorySelectListener, FragmentManager.OnBackStackChangedListener {
+class LogViewerActivity : AppCompatActivity(),
+    OnCategorySelectListener,
+    OnLogSelectListener,
+    FragmentManager.OnBackStackChangedListener {
 
     companion object {
         fun createIntent(context: Context) = Intent(context, LogViewerActivity::class.java)
@@ -54,13 +60,6 @@ class LogViewerActivity : AppCompatActivity(), OnCategorySelectListener, Fragmen
         supportFragmentManager.removeOnBackStackChangedListener(this)
     }
 
-    private fun showCategoriesFragment() {
-        supportFragmentManager
-            .beginTransaction()
-            .replace(R.id.fragmentContainerView, CategoriesFragment.newInstance(), FRAGMENT_CATEGORIES)
-            .commit()
-    }
-
     override fun onCategorySelected(category: Category) {
         title = category.name
 
@@ -70,8 +69,22 @@ class LogViewerActivity : AppCompatActivity(), OnCategorySelectListener, Fragmen
                 supportFragmentManager.findFragmentByTag(FRAGMENT_CATEGORIES)?.let(::hide)
             }
             .addToBackStack(null)
-            .add(R.id.fragmentContainerView, LogFragment.newInstance(category))
+            .add(R.id.fragmentContainerView, LogsFragment.newInstance(category))
             .commit()
+    }
+
+    override fun onLogSelected(logEntryId: kotlin.Long, severityId: Long) {
+        val transaction = supportFragmentManager.beginTransaction()
+        val previousDialog = supportFragmentManager.findFragmentByTag(FRAGMENT_LOG_DETAILS)
+
+        if (previousDialog != null) {
+            transaction.remove(previousDialog)
+        }
+
+        transaction.addToBackStack(null)
+
+        val newDialog = LogDetailsFragment.newInstance(logEntryId, severityId)
+        newDialog.show(transaction, FRAGMENT_LOG_DETAILS)
     }
 
     override fun onBackStackChanged() {
@@ -81,5 +94,12 @@ class LogViewerActivity : AppCompatActivity(), OnCategorySelectListener, Fragmen
         if (areCategoriesShown) {
             title = getString(R.string.title_log_categories)
         }
+    }
+
+    private fun showCategoriesFragment() {
+        supportFragmentManager
+            .beginTransaction()
+            .replace(R.id.fragmentContainerView, CategoriesFragment.newInstance(), FRAGMENT_CATEGORIES)
+            .commit()
     }
 }

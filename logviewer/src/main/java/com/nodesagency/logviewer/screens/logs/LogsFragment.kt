@@ -17,16 +17,17 @@ import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
 
 private const val ARGUMENT_CATEGORY = "category"
 
-internal class LogFragment : Fragment() {
-
+internal class LogsFragment : Fragment() {
     private lateinit var logEntriesRecyclerView: RecyclerView
+
     private lateinit var logEntriesAdapter: LogEntriesAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var logEntriesViewModel: LogEntriesViewModel
     private lateinit var category: Category
+    private lateinit var onLogSelectListener: OnLogSelectListener
 
     companion object {
-        fun newInstance(category: Category) = LogFragment().apply {
+        fun newInstance(category: Category) = LogsFragment().apply {
             arguments = Bundle().apply {
                 putParcelable(ARGUMENT_CATEGORY, category)
             }
@@ -36,7 +37,8 @@ internal class LogFragment : Fragment() {
     override fun onAttach(context: Context?) {
         super.onAttach(context)
 
-        // TODO: Implement log entry click listener
+        onLogSelectListener = context as? OnLogSelectListener
+                ?: throw ClassCastException("Context must implement OnLogSelectListener.")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -73,6 +75,18 @@ internal class LogFragment : Fragment() {
             .observe(this, Observer(logEntriesAdapter::submitList))
     }
 
+    override fun onResume() {
+        super.onResume()
+
+        logEntriesAdapter.onLogSelectListener = onLogSelectListener
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        logEntriesAdapter.onLogSelectListener = null
+    }
+
     /**
      * A "valid" category in this case is a category also involving an ID
      */
@@ -80,9 +94,11 @@ internal class LogFragment : Fragment() {
         val category = arguments?.getParcelable(ARGUMENT_CATEGORY) as? Category
 
         return if (category?.id == null) {
-            throw IllegalArgumentException("No valid category has been provided at fragment start. " +
-                    "Please make sure your category has an ID and to instantiate this fragment with " +
-                    "newInstance(<category>)")
+            throw IllegalArgumentException(
+                "No valid category has been provided at fragment start. " +
+                        "Please make sure your category has an ID and to instantiate this fragment with " +
+                        "newInstance(<category>)"
+            )
         } else {
             category
         }

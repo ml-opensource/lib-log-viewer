@@ -14,6 +14,8 @@ internal class LogEntriesAdapter(
 
     class ViewHolder(val logItemView: LogItemView) : RecyclerView.ViewHolder(logItemView)
 
+    var onLogSelectListener: OnLogSelectListener? = null
+
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val logItemView = LogItemView(parent.context)
 
@@ -35,6 +37,11 @@ internal class LogEntriesAdapter(
         logItemView.lineNumber = position
         logItemView.tag = logEntry.tag
         logItemView.message = logEntry.message
+        logItemView.setOnClickListener {
+            if (logEntry.id != null) {
+                onLogSelectListener?.onLogSelected(logEntry.id, logEntry.severityId)
+            }
+        }
 
         severityToColorConverter
             .getColorForSeverityId(logEntry.severityId)
