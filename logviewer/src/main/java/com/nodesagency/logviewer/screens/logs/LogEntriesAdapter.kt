@@ -1,18 +1,20 @@
-package com.nodesagency.logviewer.screens.log
+package com.nodesagency.logviewer.screens.logs
 
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.data.model.LogEntry
-import com.nodesagency.logviewer.screens.log.utilities.SeverityToColorConverter
-import com.nodesagency.logviewer.screens.log.views.LogItemView
+import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
+import com.nodesagency.logviewer.screens.logs.views.LogItemView
 
 internal class LogEntriesAdapter(
     private val severityToColorConverter: SeverityToColorConverter
 ) : PagedListAdapter<LogEntry, LogEntriesAdapter.ViewHolder>(DiffCallback()) {
 
     class ViewHolder(val logItemView: LogItemView) : RecyclerView.ViewHolder(logItemView)
+
+    var onLogSelectListener: OnLogSelectListener? = null
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         val logItemView = LogItemView(parent.context)
@@ -35,6 +37,11 @@ internal class LogEntriesAdapter(
         logItemView.lineNumber = position
         logItemView.tag = logEntry.tag
         logItemView.message = logEntry.message
+        logItemView.setOnClickListener {
+            if (logEntry.id != null) {
+                onLogSelectListener?.onLogSelected(logEntry.id, logEntry.severityId)
+            }
+        }
 
         severityToColorConverter
             .getColorForSeverityId(logEntry.severityId)

@@ -14,7 +14,7 @@ internal class CategoriesAdapter : PagedListAdapter<Category, CategoriesAdapter.
     DiffCallback()
 ) {
 
-    internal class ViewHolder(val nameTextView: TextView) : RecyclerView.ViewHolder(nameTextView)
+    class ViewHolder(val nameTextView: TextView) : RecyclerView.ViewHolder(nameTextView)
 
     var onCategorySelectListener: OnCategorySelectListener? = null
 

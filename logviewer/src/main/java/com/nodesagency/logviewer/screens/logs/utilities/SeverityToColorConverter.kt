@@ -1,4 +1,4 @@
-package com.nodesagency.logviewer.screens.log.utilities
+package com.nodesagency.logviewer.screens.logs.utilities
 
 import android.content.res.Resources
 import android.os.Build

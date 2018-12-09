@@ -36,7 +36,8 @@ internal class ExampleLogGenerator(
                     severityLevel = severityLevel,
                     message = generateMessage(logIndex, severityLevel),
                     tag = generateTag(),
-                    categoryName = generateCategoryName()
+                    categoryName = generateCategoryName(),
+                    throwable = createThrowableIfSevere(severityLevel)
                 )
 
                 if (logIndex >= undelayedInitialLogCount) {
@@ -68,6 +69,22 @@ internal class ExampleLogGenerator(
             "Network calls",
             "User profile"
         ).random()
+    }
+
+    private fun createThrowableIfSevere(severityLevel: String): Throwable? {
+        val errorSeverities = CommonSeverityLevels
+            .values()
+            .map { it.severity.level }
+            .filter(arrayOf(
+                CommonSeverityLevels.ERROR.severity.level,
+                CommonSeverityLevels.ASSERT.severity.level,
+                CommonSeverityLevels.WTF.severity.level)::contains)
+
+        return if (errorSeverities.contains(severityLevel)) {
+            RuntimeException("This is an example exception")
+        } else {
+            null
+        }
     }
 
     private fun getRandomSeverityLevel(): String {

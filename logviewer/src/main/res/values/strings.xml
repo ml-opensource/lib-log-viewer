@@ -1,3 +1,5 @@
 <resources>
     <string name="title_log_categories">Log categories</string>
+    <string name="tagTitle">Tag:</string>
+    <string name="severityTitle">Severity:</string>
 </resources>

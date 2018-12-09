@@ -47,7 +47,7 @@ internal class CategoriesFragment : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_categories, container, false)
 
-        categoriesRecyclerView = view.findViewById<RecyclerView>(R.id.categoriesView)
+        categoriesRecyclerView = view.findViewById(R.id.categoriesView)
         val dividerDecoration = DividerItemDecoration(inflater.context, VERTICAL)
 
         layoutManager = LinearLayoutManager(context)
@@ -72,5 +72,11 @@ internal class CategoriesFragment : Fragment() {
         super.onResume()
 
         categoriesAdapter.onCategorySelectListener = onCategorySelectListener
+    }
+
+    override fun onPause() {
+        super.onPause()
+
+        categoriesAdapter.onCategorySelectListener = null
     }
 }

@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.Category
+import com.nodesagency.logviewer.data.model.LogDetails
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
 
@@ -11,7 +12,6 @@ internal class DatabaseLogRepository(
     private val context: Context,
     private val database: LogDatabase = LogDatabase.createDefault(context)
 ) : LogRepository {
-
     override fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category> {
         return database
             .categoryDao()
@@ -30,12 +30,12 @@ internal class DatabaseLogRepository(
             .insert(category)
     }
 
-
     override fun put(severity: Severity): Long {
         return database
             .severityDao()
             .insert(severity)
     }
+
 
     override fun put(logEntry: LogEntry) {
         database
@@ -67,5 +67,11 @@ internal class DatabaseLogRepository(
         return database
             .categoryDao()
             .deleteAllCategories() // It's enough to delete the categories as they cascade-delete the logs too
+    }
+
+    override fun getLogDetails(logEntryId: Long): LogDetails {
+        return database
+            .logDetailsDao()
+            .getLogDetails(logEntryId)
     }
 }
