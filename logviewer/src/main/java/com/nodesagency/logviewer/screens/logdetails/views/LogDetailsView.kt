@@ -3,6 +3,7 @@ package com.nodesagency.logviewer.screens.logdetails.views
 import android.content.Context
 import android.util.AttributeSet
 import android.view.LayoutInflater
+import android.view.View
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.nodesagency.logviewer.R
@@ -40,6 +41,8 @@ internal class LogDetailsView @JvmOverloads constructor(
             severityView.text = severity
             messageView.text = message
             stackTraceView.text = stackTrace
+
+            stackTraceView.visibility = if (stackTrace.isNullOrBlank()) View.GONE else { View.VISIBLE }
         }
     }
 }
