@@ -5,6 +5,7 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.nodesagency.logviewer.data.database.daos.CategoryDao
+import com.nodesagency.logviewer.data.database.daos.LogDetailsDao
 import com.nodesagency.logviewer.data.database.daos.LogEntryDao
 import com.nodesagency.logviewer.data.database.daos.SeverityDao
 import com.nodesagency.logviewer.data.model.Category
@@ -29,5 +30,7 @@ internal abstract class LogDatabase : RoomDatabase() {
     abstract fun severityDao(): SeverityDao
 
     abstract fun logEntryDao(): LogEntryDao
+
+    abstract fun logDetailsDao(): LogDetailsDao
 
 }
