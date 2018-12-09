@@ -1,12 +1,12 @@
-package com.nodesagency.logviewer.screens.log
+package com.nodesagency.logviewer.screens.logs
 
 import android.view.ViewGroup
 import androidx.paging.PagedListAdapter
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.data.model.LogEntry
-import com.nodesagency.logviewer.screens.log.utilities.SeverityToColorConverter
-import com.nodesagency.logviewer.screens.log.views.LogItemView
+import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
+import com.nodesagency.logviewer.screens.logs.views.LogItemView
 
 internal class LogEntriesAdapter(
     private val severityToColorConverter: SeverityToColorConverter

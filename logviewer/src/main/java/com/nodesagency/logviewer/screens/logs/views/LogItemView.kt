@@ -1,4 +1,4 @@
-package com.nodesagency.logviewer.screens.log.views
+package com.nodesagency.logviewer.screens.logs.views
 
 import android.content.Context
 import android.util.AttributeSet

@@ -1,4 +1,4 @@
-package com.nodesagency.logviewer.screens.log
+package com.nodesagency.logviewer.screens.logs
 
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder

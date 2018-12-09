@@ -1,4 +1,4 @@
-package com.nodesagency.logviewer.screens.log
+package com.nodesagency.logviewer.screens.logs
 
 import android.content.Context
 import android.os.Bundle
@@ -13,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
 import com.nodesagency.logviewer.data.model.Category
-import com.nodesagency.logviewer.screens.log.utilities.SeverityToColorConverter
+import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
 
 private const val ARGUMENT_CATEGORY = "category"
 

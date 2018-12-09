@@ -8,7 +8,7 @@ import androidx.fragment.app.FragmentManager
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.screens.categories.CategoriesFragment
 import com.nodesagency.logviewer.screens.categories.OnCategorySelectListener
-import com.nodesagency.logviewer.screens.log.LogFragment
+import com.nodesagency.logviewer.screens.logs.LogFragment
 
 private const val FRAGMENT_CATEGORIES = "categories"
 private const val FRAGMENT_LOGS = "logs"
