@@ -18,7 +18,7 @@ import kotlinx.coroutines.runBlocking
 private const val ARGUMENT_LOG_ENTRY_ID = "log_entry_id"
 private const val ARGUMENT_SEVERITY_ID = "severity_id"
 
-class LogDetailsFragment : DialogFragment() {
+internal class LogDetailsFragment : DialogFragment() {
 
     private val logEntryId: Long
         get() = arguments?.getLong(ARGUMENT_LOG_ENTRY_ID)
