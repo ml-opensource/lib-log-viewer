@@ -5,6 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    tools:ignore="HardcodedText"
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <TextView
@@ -26,8 +27,8 @@
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
         android:layout_marginBottom="8dp"
-        android:text="Date/Time view"
         android:gravity="center"
+        android:text="Date/Time view"
         app:layout_constraintBottom_toBottomOf="@+id/tagView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -67,7 +68,6 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
         android:layout_marginBottom="16dp"
         android:text="Message view"
         app:layout_constraintBottom_toTopOf="@+id/stackTraceView"
@@ -80,7 +80,6 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"
-        android:layout_marginRight="0dp"
         android:layout_marginBottom="16dp"
         android:text="Stack trace view"
         app:layout_constraintBottom_toBottomOf="parent"
