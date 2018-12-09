@@ -20,7 +20,7 @@ You need to initialize the library before logging anything. Usually you'd want t
 Logger.initialize(context)
 ```
 
-By default, the logs are stored in a Room database. However, you can create your own implementation of `LogRepository` 
+By default, the logs are stored in a Room-backed database. However, you can create your own implementation of `LogRepository` 
 and use that instead. 
 
 ```kotlin
