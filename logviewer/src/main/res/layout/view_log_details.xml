@@ -63,22 +63,28 @@
 
     <TextView
         android:id="@+id/messageView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginBottom="16dp"
         android:text="Message view"
         app:layout_constraintBottom_toTopOf="@+id/stackTraceView"
+        app:layout_constraintEnd_toEndOf="@+id/severityView"
         app:layout_constraintStart_toStartOf="@+id/tagView"
         app:layout_constraintTop_toBottomOf="@+id/tagView" />
 
     <TextView
         android:id="@+id/stackTraceView"
-        android:layout_width="wrap_content"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
+        android:layout_marginEnd="0dp"
+        android:layout_marginRight="0dp"
         android:layout_marginBottom="16dp"
         android:text="Stack trace view"
         app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="@+id/severityView"
         app:layout_constraintStart_toStartOf="@+id/messageView"
         app:layout_constraintTop_toBottomOf="@+id/messageView" />
 
