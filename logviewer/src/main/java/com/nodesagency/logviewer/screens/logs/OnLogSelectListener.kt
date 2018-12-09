@@ -1,5 +1,5 @@
 package com.nodesagency.logviewer.screens.logs
 
-interface OnLogSelectListener {
+internal interface OnLogSelectListener {
     fun onLogSelected(logEntryId: kotlin.Long, severityId: Long)
 }

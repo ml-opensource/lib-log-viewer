@@ -5,7 +5,7 @@ import androidx.room.Query
 import com.nodesagency.logviewer.data.model.LogDetails
 
 @Dao
-interface LogDetailsDao {
+internal interface LogDetailsDao {
 
     @Query("""
         SELECT
