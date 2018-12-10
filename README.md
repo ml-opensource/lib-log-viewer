@@ -67,19 +67,19 @@ LogViewerActivity
     .let { startActivity(it) }
 ```
 
-### First a category has to be selected
+### First a category has to be selected.
 
 ![Log categories screenshot](/.readme/img/scr1.png?raw=true "Log categories screenshot")
 
-### Then all the logs for that category will be shown
+### Then all the logs for that category will be shown.
 
 ![Log list screenshot](/.readme/img/scr2.png?raw=true "Log list screenshot")
 
-### Landscape orientation allows more message text to be seen. Line numbers are also shown then
+### Landscape orientation allows more message text to be seen. Line numbers are also shown then.
 
 ![Landscape log list screenshot](/.readme/img/scr5.png?raw=true "Landscape log list screenshot")
 
-### Tapping on a log opens its details
+### Tapping on a log opens its details.
 
 ![Assert log details screenshot](/.readme/img/scr3.png?raw=true "Assert log details screenshot")
 ![Debug log details screenshot](/.readme/img/scr4.png?raw=true "Debug log details screenshot")
