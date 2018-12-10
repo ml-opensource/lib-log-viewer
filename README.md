@@ -31,8 +31,8 @@ Logger.initialize(context, myRepository)
 
 Your log entry contains the following information:
 - The time of logging (inserted automatically)
-- A category name to group your logs under
-- A severity level (e.g. warning, error, debug etc.); verbose by default 
+- A category name to group your logs under ("General" by default)
+- A severity level (e.g. warning, error, debug etc.); verbose by default.
 - A tag (optional)
 - A throwable (optional)
 - A log message 
