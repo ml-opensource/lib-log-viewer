@@ -1,10 +1,15 @@
 package com.nodesagency.logviewer.screens.logs.views
 
 import android.content.Context
+import android.graphics.drawable.ColorDrawable
+import android.graphics.drawable.Drawable
+import android.graphics.drawable.LayerDrawable
 import android.util.AttributeSet
+import android.util.TypedValue
 import android.view.LayoutInflater
 import android.widget.LinearLayout
 import android.widget.TextView
+import androidx.annotation.ColorInt
 import com.nodesagency.logviewer.R
 
 internal class LogItemView @JvmOverloads constructor(
@@ -15,6 +20,8 @@ internal class LogItemView @JvmOverloads constructor(
     private val lineNumberView: TextView
     private val tagView: TextView
     private val messageView: TextView
+
+    private var selectableDrawable: Drawable? = null
 
     var lineNumber: Int
         get() = lineNumberView.text.toString().toInt()
@@ -34,6 +41,16 @@ internal class LogItemView @JvmOverloads constructor(
             messageView.text = value
         }
 
+    @ColorInt
+    var severityColor: Int = 0
+    set(value) {
+        field = value
+        background = LayerDrawable(arrayOf(
+            ColorDrawable(value),
+            selectableDrawable
+        ))
+    }
+
     init {
         LayoutInflater
             .from(context)
@@ -42,5 +59,15 @@ internal class LogItemView @JvmOverloads constructor(
         lineNumberView = findViewById(R.id.lineNumberView)
         tagView = findViewById(R.id.tagView)
         messageView = findViewById(R.id.messageView)
+
+        // Does not work when setting in xml merge tag
+        isClickable = true
+        isFocusable = true
+
+        val outValue = TypedValue()
+        context.theme.resolveAttribute(android.R.attr.selectableItemBackground, outValue, true)
+        setBackgroundResource(outValue.resourceId)
+        selectableDrawable = context.getDrawable(outValue.resourceId)
     }
+
 }
