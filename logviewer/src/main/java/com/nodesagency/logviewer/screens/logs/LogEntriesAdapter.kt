@@ -45,7 +45,7 @@ internal class LogEntriesAdapter(
 
         severityToColorConverter
             .getColorForSeverityId(logEntry.severityId)
-            ?.let(logItemView::setBackgroundColor)
+            ?.let { logItemView.severityColor = it }
     }
 }
 
