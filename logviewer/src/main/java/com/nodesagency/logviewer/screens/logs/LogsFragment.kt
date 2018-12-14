@@ -2,9 +2,8 @@ package com.nodesagency.logviewer.screens.logs
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,6 +13,7 @@ import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
+import kotlinx.android.synthetic.main.fragment_logs.*
 
 private const val ARGUMENT_CATEGORY = "category"
 
@@ -25,6 +25,8 @@ internal class LogsFragment : Fragment() {
     private lateinit var logEntriesViewModel: LogEntriesViewModel
     private lateinit var category: Category
     private lateinit var onLogSelectListener: OnLogSelectListener
+
+    private var searchViewMenuItem: MenuItem? = null
 
     companion object {
         fun newInstance(category: Category) = LogsFragment().apply {
@@ -46,11 +48,47 @@ internal class LogsFragment : Fragment() {
 
         category = getValidCategoryOrThrow(arguments)
         val categoryId = category.id!! // !! is safe because of getValidCategoryOrThrow()
-
+        setHasOptionsMenu(true)
         logEntriesViewModel = ViewModelProviders
             .of(this, LogEntriesViewModelFactory(categoryId, Logger.getRepository()))
             .get(LogEntriesViewModel::class.java)
     }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_logs, menu)
+        searchViewMenuItem = menu?.findItem(R.id.actionSearch)
+        filtersRadioGroup.check(R.id.filterMessage)
+        (searchViewMenuItem?.actionView as SearchView?)?.let { searchView ->
+
+            searchView.setOnSearchClickListener {
+                toggleFilters(true)
+            }
+
+            searchView.setOnCloseListener {
+                toggleFilters(false)
+                return@setOnCloseListener true
+            }
+
+        }
+    }
+
+
+    private fun toggleFilters(isEnabled: Boolean) {
+        if (isEnabled) {
+            filtersRadioGroup.visibility = View.VISIBLE
+            searchViewMenuItem?.expandActionView()
+        } else {
+            filtersRadioGroup.visibility = View.GONE
+            (searchViewMenuItem?.actionView as SearchView?)?.let {
+                it.setQuery("", true)
+                it.onActionViewCollapsed()
+            }
+        }
+
+    }
+
+
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_logs, container, false)

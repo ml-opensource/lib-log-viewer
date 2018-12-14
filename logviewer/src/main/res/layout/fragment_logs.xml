@@ -1,5 +1,47 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.recyclerview.widget.RecyclerView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/logEntriesView"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
-    android:layout_height="match_parent" />
+    android:layout_height="match_parent"
+    android:animateLayoutChanges="true"
+    android:orientation="vertical">
+
+
+    <RadioGroup
+        android:id="@+id/filtersRadioGroup"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:background="@color/severity_blue"
+        android:orientation="vertical"
+        android:padding="12dp"
+        android:visibility="gone">
+
+        <RadioButton
+            android:id="@+id/filterMessage"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="By Message" />
+
+
+        <RadioButton
+            android:id="@+id/filterTag"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="By Tag" />
+
+
+        <RadioButton
+            android:id="@+id/filterSeverity"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="By Severity" />
+
+    </RadioGroup>
+
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/logEntriesView"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent" />
+
+
+</LinearLayout>

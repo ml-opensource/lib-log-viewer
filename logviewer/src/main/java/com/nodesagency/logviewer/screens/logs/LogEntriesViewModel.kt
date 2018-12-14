@@ -11,5 +11,4 @@ internal class LogEntriesViewModel(categoryId: Long, logRepository: LogRepositor
     private val logEntriesDataSource = logRepository.getChronologicallySortedLogEntries(categoryId)
 
     val logEntryList = LivePagedListBuilder(logEntriesDataSource, PAGE_SIZE).build()
-
 }
