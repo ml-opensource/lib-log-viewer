@@ -3,6 +3,7 @@ package com.nodesagency.logviewer.data.model
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
+import java.util.*
 
 /**
  * The model for log entries. If [categoryId] is not specified, it will be part of the general log category.
@@ -32,4 +33,14 @@ data class LogEntry(
     val message: String,
     val stackTrace: String?,
     val tag: String? = null
-)
+) {
+
+    fun toShareMessage() : String {
+        return "LogEntry: \n" +
+                "Message: $message\n" +
+                "Tag: $tag\n" +
+                "Timestamp: ${Date(timestampMilliseconds)}\n" +
+                "Stack Trace: $stackTrace"
+    }
+
+}
