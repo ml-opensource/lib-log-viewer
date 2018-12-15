@@ -66,7 +66,7 @@ internal class LogsFragment : Fragment() {
                     putExtra(Intent.EXTRA_TEXT, shareMessage)
                     type = "text/plain"
                 }
-                startActivity(Intent.createChooser(sendIntent, "Share logs category"))
+                startActivity(Intent.createChooser(sendIntent, getString(R.string.share_category_message)))
 
                 return true
             }

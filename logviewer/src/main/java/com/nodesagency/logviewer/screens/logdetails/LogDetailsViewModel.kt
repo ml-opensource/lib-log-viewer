@@ -10,14 +10,12 @@ import kotlinx.coroutines.launch
 
 internal class  LogDetailsViewModel(private val logRepository: LogRepository, logEntryId: Long) : ViewModel() {
 
-    private val mLogEntryLiveData : MutableLiveData<LogDetails> = MutableLiveData()
+    val logEntryLiveData : MutableLiveData<LogDetails> = MutableLiveData()
 
-    val logEntryLiveData: LiveData<LogDetails>
-        get() = mLogEntryLiveData
 
     init {
         GlobalScope.launch {
-            mLogEntryLiveData.postValue(logRepository.getLogDetails(logEntryId))
+            logEntryLiveData.postValue(logRepository.getLogDetails(logEntryId))
         }
     }
 

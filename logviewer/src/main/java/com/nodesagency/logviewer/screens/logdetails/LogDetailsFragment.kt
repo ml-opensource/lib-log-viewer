@@ -66,7 +66,7 @@ internal class LogDetailsFragment : DialogFragment() {
                     putExtra(Intent.EXTRA_TEXT, logDetails.toShareMessage())
                     type = "text/plain"
                 }
-                startActivity(Intent.createChooser(sendIntent, "Send log"))
+                startActivity(Intent.createChooser(sendIntent, getString(R.string.share_log_message)))
             }
         })
     }
