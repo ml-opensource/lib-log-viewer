@@ -83,3 +83,48 @@ LogViewerActivity
 
 ![Assert log details screenshot](/.readme/img/scr3.png?raw=true "Assert log details screenshot")
 ![Debug log details screenshot](/.readme/img/scr4.png?raw=true "Debug log details screenshot")
+
+## Using with Timber
+
+### Setting up
+
+```kotlin
+Timber.plant(Logger.tree)
+```
+
+These calls will be redirected to the logging library.
+```kotlin
+Timber.log(CommonSeverityLevels.[LEVEL].severity.id, throwable, message, ... args)
+Timber.d(throwable, message, ...args)
+```
+
+### Severity Levels
+
+When using methods such as `Timber.d`, `Timber` will pass constants from `android.util.Log` to the tree. These constants map almost exactly to the severity levels of the logging library. The only exception is `wtf`. `Timber` will pass `ASSERT` when calling `wtf`, therefore, logging `ASSERT` with `Timber` can be done with either of these calls
+```kotlin
+Timber.wtf("Message")
+Timber.log(CommonSeverityLevels.ASSERT.severity.id, "Message")
+```
+
+When passing id of one of the `CommonSeverityLevels`, `Timber` will pass the id to the tree.
+
+Therefore, the only way to log `wtf` with Timber
+```kotlin
+Timber.log(CommonSeverityLevels.WTF.severity.id, "Message")
+```
+
+### Tags
+
+`LoggerTree` extends from `DebugTree` therefore by default the tags will be class names. The logging library will reflect the tag which is currently used with `Timber`.
+
+### Category
+
+To change logging category for the next logs
+```kotlin
+Logger.category = "My Category"
+Timber.d("This log is going to My Category")
+```
+
+### Etc
+
+When logging throwables with `Timber`, `Timber` will append the throwable to the message, the log with throwable in the list may contain another line with text from the throwable
