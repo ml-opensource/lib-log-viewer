@@ -3,6 +3,9 @@ package com.nodesagency.logtestapp
 import android.os.Bundle
 import android.view.View
 import androidx.appcompat.app.AppCompatActivity
+import com.nodesagency.logtestapp.generator.ExampleLogGenerator
+import com.nodesagency.logtestapp.generator.LogGenerator
+import com.nodesagency.logtestapp.generator.TimberLogGenerator
 import com.nodesagency.logviewer.LogViewerActivity
 import com.nodesagency.logviewer.Logger
 import kotlinx.android.synthetic.main.activity_main.*
@@ -10,13 +13,13 @@ import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var exampleLogGenerator: ExampleLogGenerator
+    private lateinit var logGenerator: LogGenerator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        exampleLogGenerator = ExampleLogGenerator(
+        logGenerator = ExampleLogGenerator(
             logCount = 1000,
             delayBetweenLogsMilliseconds = 500,
             undelayedInitialLogCount = 6
@@ -26,7 +29,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     override fun onResume() {
         super.onResume()
 
-        exampleLogGenerator.stop() // Stop generating logs when the LogViewerActivity is stopped
+        logGenerator.stop() // Stop generating logs when the LogViewerActivity is stopped
 
         setAllButtonListener(this)
     }
@@ -50,7 +53,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
     }
 
     private fun startLogViewerActivityWithLiveLogging() {
-        exampleLogGenerator.start()
+        logGenerator.start()
 
         LogViewerActivity
             .createIntent(this)
