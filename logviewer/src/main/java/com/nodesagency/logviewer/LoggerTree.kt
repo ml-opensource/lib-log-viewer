@@ -3,7 +3,7 @@ package com.nodesagency.logviewer
 import timber.log.Timber
 
 
-class LoggerTree internal constructor() : Timber.Tree() {
+class LoggerTree : Timber.DebugTree() {
 
     var category: String = GENERAL_CATEGORY_NAME
 

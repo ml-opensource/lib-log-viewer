@@ -22,8 +22,6 @@ object Logger {
     private var isInitialized = false
     private lateinit var logRepository: LogRepository
 
-    val tree: LoggerTree by lazy { LoggerTree() }
-
     /**
      * Initializes the library. This has to be called before any logging is performed. Usually you'll want to do this in
      * your application's `onCreate()` method.

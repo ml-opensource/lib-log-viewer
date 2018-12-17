@@ -10,17 +10,16 @@ import kotlinx.coroutines.runBlocking
 
 class MainActivity : AppCompatActivity(), View.OnClickListener {
 
-    private lateinit var exampleLogGenerator: ExampleLogGenerator
+    private lateinit var exampleLogGenerator: TimberLogGenerator
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        exampleLogGenerator = ExampleLogGenerator(
+        exampleLogGenerator = TimberLogGenerator(
             logCount = 1000,
             delayBetweenLogsMilliseconds = 500,
-            undelayedInitialLogCount = 6,
-            useTimber = true
+            undelayedInitialLogCount = 6
         )
     }
 
