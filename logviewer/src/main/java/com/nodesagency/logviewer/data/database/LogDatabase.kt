@@ -12,7 +12,7 @@ import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
 
-private const val DATABASE_NAME = "log_database"
+internal const val DATABASE_NAME = "log_database"
 
 @Database(entities = [Category::class, LogEntry::class, Severity::class], version = 1)
 internal abstract class LogDatabase : RoomDatabase() {

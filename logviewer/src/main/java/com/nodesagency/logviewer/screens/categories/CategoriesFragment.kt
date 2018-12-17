@@ -13,6 +13,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
+import com.nodesagency.logviewer.data.database.DATABASE_NAME
+import android.content.Intent
+import android.net.Uri
+import androidx.core.content.FileProvider
+import com.nodesagency.logviewer.BuildConfig
+import java.io.File
+import java.io.FileInputStream
+import java.io.FileOutputStream
+
 
 internal class CategoriesFragment : Fragment() {
 
@@ -93,6 +102,33 @@ internal class CategoriesFragment : Fragment() {
                 return true
             }
         })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId) {
+            R.id.actionShareDb -> {
+                val dbPath = context?.getDatabasePath(DATABASE_NAME) ?: return true
+                val uri  = createDbCopy(dbPath)
+                val shareIntent = Intent(Intent.ACTION_SEND).apply {
+                    putExtra(Intent.EXTRA_STREAM, uri)
+                    type = "*/*"
+
+                }
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_file_message)))
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun createDbCopy(dbFile: File) : Uri {
+        val dbCopy = File(context?.filesDir, "database.db")
+        val input = FileInputStream(dbFile).channel
+        val output = FileOutputStream(dbCopy).channel
+        input.transferTo(0, input.size(), output)
+        input.close()
+        output.close()
+        return  FileProvider.getUriForFile(context!!, "${BuildConfig.APPLICATION_ID}.fileprovider", dbCopy)
     }
 
     override fun onResume() {

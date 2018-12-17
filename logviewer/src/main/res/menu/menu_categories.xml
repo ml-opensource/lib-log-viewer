@@ -8,4 +8,17 @@
         app:showAsAction="always"
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
+    <item
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_share"
+        android:title="@string/action_share">
+
+        <menu>
+            <item
+                android:id="@+id/actionShareDb"
+                android:title="@string/action_share_db_file"/>
+        </menu>
+
+    </item>
+
 </menu>
