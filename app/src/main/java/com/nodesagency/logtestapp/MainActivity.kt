@@ -19,7 +19,8 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         exampleLogGenerator = ExampleLogGenerator(
             logCount = 1000,
             delayBetweenLogsMilliseconds = 500,
-            undelayedInitialLogCount = 6
+            undelayedInitialLogCount = 6,
+            useTimber = true
         )
     }
 
