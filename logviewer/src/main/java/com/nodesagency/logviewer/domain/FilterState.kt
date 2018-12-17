@@ -2,11 +2,12 @@ package com.nodesagency.logviewer.domain
 
 sealed class FilterState(
     val category: Long,
-    query: String
+    var query: String
 ) {
 
-    var query: String = query
-        get() = "%$field%"
+    fun toQuery() : String {
+        return "%$query%"
+    }
 
     class Disabled(category: Long) : FilterState(category,"")
     class ByMessage(category: Long, query: String) : FilterState(category, query)

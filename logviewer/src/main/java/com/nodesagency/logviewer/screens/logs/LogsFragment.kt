@@ -60,60 +60,6 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
             .get(LogEntriesViewModel::class.java)
     }
 
-    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
-        super.onCreateOptionsMenu(menu, inflater)
-        inflater?.inflate(R.menu.menu_logs, menu)
-        searchViewMenuItem = menu?.findItem(R.id.actionSearch)
-        filtersRadioGroup.check(R.id.filterMessage)
-        searchView?.let { searchView ->
-
-            searchView.setOnQueryTextListener(this)
-
-            searchView.setOnSearchClickListener {
-                toggleFilters(true)
-            }
-
-            searchView.setOnCloseListener {
-                toggleFilters(false)
-                return@setOnCloseListener true
-            }
-        }
-
-    }
-
-
-    private fun toggleFilters(isEnabled: Boolean) {
-        if (isEnabled) {
-            filtersRadioGroup.visibility = View.VISIBLE
-            searchViewMenuItem?.expandActionView()
-        } else {
-            filtersRadioGroup.visibility = View.GONE
-            searchView?.let {
-                it.setQuery("", true)
-                it.onActionViewCollapsed()
-            }
-        }
-
-    }
-
-
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-       return when (item?.itemId) {
-            R.id.logsCategoryShare -> {
-                val shareMessage = "Logs from ${category.name} category\n" +
-                        logEntriesViewModel.logEntryList.value?.joinToString("\n") {it.toShareMessage()}
-                val sendIntent: Intent = Intent().apply {
-                    action = Intent.ACTION_SEND
-                    putExtra(Intent.EXTRA_TEXT, shareMessage)
-                    type = "text/plain"
-                }
-                startActivity(Intent.createChooser(sendIntent, getString(R.string.share_category_message)))
-
-                return true
-            }
-            else -> super.onOptionsItemSelected(item)
-        }
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_logs, container, false)
@@ -137,9 +83,7 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
             .logEntryList
             .observe(this, Observer(logEntriesAdapter::submitList))
 
-
         filtersRadioGroup.setOnCheckedChangeListener { _, id ->
-            Log.d("Filter", "Radio checked")
             when (id) {
                 R.id.filterSeverity -> logEntriesViewModel.filterBySeverity()
                 R.id.filterMessage -> logEntriesViewModel.filterByMessage()
@@ -149,12 +93,97 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
 
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_logs, menu)
+        searchViewMenuItem = menu?.findItem(R.id.actionSearch)
+
+
+        logEntriesViewModel.filterLiveData.value?.let {
+            when(it) {
+                is FilterState.BySeverity -> {
+                    toggleFilters(true, R.id.filterSeverity)
+                }
+                is FilterState.ByMessage -> {
+                    toggleFilters(true, R.id.filterMessage)
+                }
+                is FilterState.ByTag -> {
+                    toggleFilters(true, R.id.filterSeverity)
+                }
+                is FilterState.Disabled -> {
+                    toggleFilters(false)
+                    filtersRadioGroup.clearCheck()
+                }
+            }
+
+        }
+
+        searchView?.let { searchView ->
+
+            logEntriesViewModel.filterLiveData.value?.let {
+                searchView.setQuery(it.query, true)
+            }
+
+            searchView.setOnQueryTextListener(this)
+
+            searchView.setOnSearchClickListener {
+                toggleFilters(true)
+            }
+
+            searchView.setOnCloseListener {
+                toggleFilters(false)
+                return@setOnCloseListener true
+            }
+        }
+
+    }
+
+
+
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.logsCategoryShare -> {
+                val shareMessage = "Logs from ${category.name} category\n" +
+                        logEntriesViewModel.logEntryList.value?.joinToString("\n") {it.toShareMessage()}
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, shareMessage)
+                    type = "text/plain"
+                }
+                startActivity(Intent.createChooser(sendIntent, getString(R.string.share_category_message)))
+
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+
+    private fun toggleFilters(isEnabled: Boolean, activeRadioButton: Int = R.id.filterMessage) {
+        if (isEnabled) {
+            filtersRadioGroup.visibility = View.VISIBLE
+
+            // Default filter when active
+            filtersRadioGroup.check(activeRadioButton)
+            searchView?.onActionViewExpanded()
+        } else {
+            filtersRadioGroup.visibility = View.GONE
+            searchView?.let {
+                it.setQuery("", true)
+                it.onActionViewCollapsed()
+                filtersRadioGroup.clearCheck()
+            }
+        }
+
+    }
+
+
     override fun onQueryTextSubmit(query: String?): Boolean {
         return true
     }
 
     override fun onQueryTextChange(newText: String?): Boolean {
-        Log.d("Filter", "Text changed")
         logEntriesViewModel.changeFilterQuery(newText ?: "")
         return true
     }

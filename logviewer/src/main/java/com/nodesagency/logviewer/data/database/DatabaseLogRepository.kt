@@ -80,11 +80,10 @@ internal class DatabaseLogRepository(
 
     override fun getLogsFilteredBy(state: FilterState): DataSource.Factory<Int, LogEntry> {
         if (state.query.isEmpty()) return getChronologicallySortedLogEntries(state.category)
-        Log.d("Filter", "getLogs: $state ${state.query}")
         return when(state) {
-            is FilterState.ByMessage -> database.logEntryDao().getLogsWithMessage(state.category, state.query)
-            is FilterState.ByTag -> database.logEntryDao().getLogsWithTag(state.category, state.query)
-            is FilterState.BySeverity -> database.logEntryDao().getLogsWithTag(state.category, state.query)
+            is FilterState.ByMessage -> database.logEntryDao().getLogsWithMessage(state.category, state.toQuery())
+            is FilterState.ByTag -> database.logEntryDao().getLogsWithTag(state.category, state.toQuery())
+            is FilterState.BySeverity -> database.logEntryDao().getLogsWithTag(state.category, state.toQuery())
             is FilterState.Disabled -> getChronologicallySortedLogEntries(state.category)
         }
     }
