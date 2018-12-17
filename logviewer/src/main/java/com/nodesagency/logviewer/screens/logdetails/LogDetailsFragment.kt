@@ -1,19 +1,18 @@
 package com.nodesagency.logviewer.screens.logdetails
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.WindowManager
 import androidx.fragment.app.DialogFragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
-import com.nodesagency.logviewer.concurrency.CoroutineScopeProvider
-import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
 import kotlinx.android.synthetic.main.fragment_log_details.*
-import kotlinx.coroutines.async
-import kotlinx.coroutines.runBlocking
 
 private const val ARGUMENT_LOG_ENTRY_ID = "log_entry_id"
 private const val ARGUMENT_SEVERITY_ID = "severity_id"
@@ -28,7 +27,7 @@ internal class LogDetailsFragment : DialogFragment() {
         get() = arguments?.getLong(ARGUMENT_SEVERITY_ID)
             ?: throw IllegalStateException("No severity ID found among arguments")
 
-    private lateinit var logRepository: LogRepository
+    private lateinit var viewModel: LogDetailsViewModel
 
     companion object {
         fun newInstance(logEntryId: Long, severityId: Long) = LogDetailsFragment().apply {
@@ -42,18 +41,39 @@ internal class LogDetailsFragment : DialogFragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        logRepository = Logger.getRepository()
+        val logRepository = Logger.getRepository()
+        viewModel = ViewModelProviders
+            .of(this, LogDetailsViewModelFactory(logRepository, logEntryId))
+            .get(LogDetailsViewModel::class.java)
+
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         return inflater.inflate(R.layout.fragment_log_details, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+
+        viewModel.logEntryLiveData.observe(this, Observer { logDetails ->
+            logDetailsView.setLogDetails(logDetails)
+
+            logDetailsShareBtn.setOnClickListener {
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, logDetails.toShareMessage())
+                    type = "text/plain"
+                }
+                startActivity(Intent.createChooser(sendIntent, getString(R.string.share_log_message)))
+            }
+        })
+    }
+
     override fun onResume() {
         super.onResume()
-
         updateLayoutParameters()
-        loadData()
         setBackgroundColor()
     }
 
@@ -64,20 +84,6 @@ internal class LogDetailsFragment : DialogFragment() {
         params?.height = ViewGroup.LayoutParams.WRAP_CONTENT
 
         dialog?.window?.attributes = params as WindowManager.LayoutParams
-    }
-
-    private fun loadData() {
-        runBlocking {
-            val logDetailsDeferred = CoroutineScopeProvider.ioScope.async {
-                logRepository.getLogDetails(logEntryId)
-            }
-
-            val logDetails = logDetailsDeferred.await()
-
-            if (!logDetailsDeferred.isCancelled) {
-                logDetailsView.setLogDetails(logDetails)
-            }
-        }
     }
 
     private fun setBackgroundColor() {
