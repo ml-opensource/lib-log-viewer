@@ -54,7 +54,6 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
         setHasOptionsMenu(true)
         category = getValidCategoryOrThrow(arguments)
         val categoryId = category.id!! // !! is safe because of getValidCategoryOrThrow()
-        setHasOptionsMenu(true)
         logEntriesViewModel = ViewModelProviders
             .of(this, LogEntriesViewModelFactory(categoryId, Logger.getRepository()))
             .get(LogEntriesViewModel::class.java)
@@ -91,6 +90,10 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
             }
         }
 
+        filterDisable.setOnClickListener {
+            toggleFilters(false)
+        }
+
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
@@ -98,7 +101,12 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
         inflater?.inflate(R.menu.menu_logs, menu)
         searchViewMenuItem = menu?.findItem(R.id.actionSearch)
 
+    }
 
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        activity?.invalidateOptionsMenu()
         logEntriesViewModel.filterLiveData.value?.let {
             when(it) {
                 is FilterState.BySeverity -> {
@@ -120,8 +128,9 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
 
         searchView?.let { searchView ->
 
+
             logEntriesViewModel.filterLiveData.value?.let {
-                searchView.setQuery(it.query, true)
+                searchView.setQuery(it.query, false)
             }
 
             searchView.setOnQueryTextListener(this)
@@ -130,14 +139,11 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
                 toggleFilters(true)
             }
 
-            searchView.setOnCloseListener {
-                toggleFilters(false)
-                return@setOnCloseListener true
-            }
         }
 
-    }
 
+
+    }
 
 
 

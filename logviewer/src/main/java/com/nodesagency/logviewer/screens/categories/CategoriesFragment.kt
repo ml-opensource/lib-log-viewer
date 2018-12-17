@@ -85,6 +85,11 @@ internal class CategoriesFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_categories, menu)
+
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
         searchMenuItem = menu?.findItem(R.id.actionSearch)
 
 
