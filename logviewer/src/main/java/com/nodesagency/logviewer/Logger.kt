@@ -23,6 +23,20 @@ object Logger {
     private lateinit var logRepository: LogRepository
 
     /**
+     * Plant with Timber
+     */
+    val tree: LoggerTree by lazy { LoggerTree() }
+
+    /**
+     * Set category when logging with Timber
+     */
+    var category: String
+        get() = tree.category
+        set(value) {
+            tree.category = value
+        }
+
+    /**
      * Initializes the library. This has to be called before any logging is performed. Usually you'll want to do this in
      * your application's `onCreate()` method.
      *

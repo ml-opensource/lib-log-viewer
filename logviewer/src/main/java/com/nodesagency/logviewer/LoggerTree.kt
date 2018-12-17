@@ -3,9 +3,9 @@ package com.nodesagency.logviewer
 import timber.log.Timber
 
 
-class LoggerTree : Timber.DebugTree() {
+class LoggerTree internal constructor(): Timber.DebugTree() {
 
-    var category: String = GENERAL_CATEGORY_NAME
+    internal var category: String = GENERAL_CATEGORY_NAME
 
     override fun log(priority: Int, tag: String?, message: String, t: Throwable?) {
         Logger.log(

@@ -1,50 +1,27 @@
-package com.nodesagency.logtestapp
+package com.nodesagency.logtestapp.generator
 
 import com.nodesagency.logviewer.CommonSeverityLevels
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.data.model.Severity
-import kotlinx.coroutines.*
 import kotlin.random.Random
 
 internal class ExampleLogGenerator(
-    private val logCount: Int,
-    private val delayBetweenLogsMilliseconds: Long = 0L,
-    private val undelayedInitialLogCount: Int = 0
-) {
-    private var scope: CoroutineScope? = null
+    logCount: Int,
+    delayBetweenLogsMilliseconds: Long = 0L,
+    undelayedInitialLogCount: Int = 0
+) : LogGenerator(logCount, delayBetweenLogsMilliseconds, undelayedInitialLogCount) {
 
-    fun start() {
-        scope = CoroutineScope(kotlinx.coroutines.Dispatchers.Default)
-        generateLogs()
-    }
+    override fun log(messageIndex: Int) {
+        val severityLevel = getRandomSeverityLevel()
 
-    fun stop() {
-        scope?.coroutineContext?.cancel()
-    }
+        Logger.log(
+            severityLevel = severityLevel,
+            message = generateMessage(messageIndex, severityLevel),
+            tag = generateTag(),
+            categoryName = generateCategoryName(),
+            throwable = createThrowableIfSevere(severityLevel)
+        )
 
-    private fun generateLogs() = runBlocking {
-        scope?.launch {
-            for (logIndex in 0 until logCount) {
-
-                if (!isActive) {
-                    return@launch
-                }
-
-                val severityLevel = getRandomSeverityLevel()
-
-                Logger.log(
-                    severityLevel = severityLevel,
-                    message = generateMessage(logIndex, severityLevel),
-                    tag = generateTag(),
-                    categoryName = generateCategoryName(),
-                    throwable = createThrowableIfSevere(severityLevel)
-                )
-
-                if (logIndex >= undelayedInitialLogCount) {
-                    delay(delayBetweenLogsMilliseconds)
-                }
-            }
-        }
     }
 
     private fun generateMessage(logIndex: Int, severityLevel: String): String {
