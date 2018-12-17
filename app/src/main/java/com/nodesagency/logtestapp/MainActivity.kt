@@ -19,7 +19,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        logGenerator = TimberLogGenerator(
+        logGenerator = ExampleLogGenerator(
             logCount = 1000,
             delayBetweenLogsMilliseconds = 500,
             undelayedInitialLogCount = 6
