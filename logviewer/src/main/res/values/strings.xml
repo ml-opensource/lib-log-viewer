@@ -5,4 +5,8 @@
 
     <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="action_search">Search</string>
+    <string name="action_share">Share</string>
+    <string name="share_category_message">Share logs category</string>
+    <string name="share_log_message">Send log</string>
 </resources>

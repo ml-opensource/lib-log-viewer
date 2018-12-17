@@ -1,6 +1,7 @@
 package com.nodesagency.logviewer.screens.logs
 
 import android.content.Context
+import android.content.Intent
 import android.os.Bundle
 import android.view.*
 import androidx.appcompat.widget.SearchView
@@ -45,7 +46,7 @@ internal class LogsFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
         category = getValidCategoryOrThrow(arguments)
         val categoryId = category.id!! // !! is safe because of getValidCategoryOrThrow()
         setHasOptionsMenu(true)
@@ -89,6 +90,23 @@ internal class LogsFragment : Fragment() {
     }
 
 
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+       return when (item?.itemId) {
+            R.id.logsCategoryShare -> {
+                val shareMessage = "Logs from ${category.name} category\n" +
+                        logEntriesViewModel.logEntryList.value?.joinToString("\n") {it.toShareMessage()}
+                val sendIntent: Intent = Intent().apply {
+                    action = Intent.ACTION_SEND
+                    putExtra(Intent.EXTRA_TEXT, shareMessage)
+                    type = "text/plain"
+                }
+                startActivity(Intent.createChooser(sendIntent, getString(R.string.share_category_message)))
+
+                return true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
         val view = inflater.inflate(R.layout.fragment_logs, container, false)

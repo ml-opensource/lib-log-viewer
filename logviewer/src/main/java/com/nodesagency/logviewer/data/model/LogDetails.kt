@@ -10,4 +10,15 @@ data class LogDetails(
     val severity: String,
     val message: String,
     val stackTrace: String?
-)
+) {
+
+    fun toShareMessage() : String {
+        return "Log details: \n" +
+                "Timestamp: $timestampMilliseconds\n" +
+                "Category: $category\n" +
+                "Severity: $severity\n" +
+                "Message: $message\n" +
+                "Stack Trace: $stackTrace"
+    }
+
+}

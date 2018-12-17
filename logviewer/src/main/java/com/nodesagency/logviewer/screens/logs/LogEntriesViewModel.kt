@@ -22,7 +22,6 @@ internal class LogEntriesViewModel(categoryId: Long, logRepository: LogRepositor
         val state = filterLiveData.value ?: DEFAULT_FILTER
         state.query = query
         filterLiveData.postValue(state)
-        l
     }
 
 
