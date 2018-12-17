@@ -1,12 +1,14 @@
 package com.nodesagency.logviewer.data.database
 
 import android.content.Context
+import android.util.Log
 import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogDetails
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
+import com.nodesagency.logviewer.domain.FilterState
 
 internal class DatabaseLogRepository(
     private val context: Context,
@@ -73,5 +75,17 @@ internal class DatabaseLogRepository(
         return database
             .logDetailsDao()
             .getLogDetails(logEntryId)
+    }
+
+
+    override fun getLogsFilteredBy(state: FilterState): DataSource.Factory<Int, LogEntry> {
+        if (state.query.isEmpty()) return getChronologicallySortedLogEntries(state.category)
+        Log.d("Filter", "getLogs: $state ${state.query}")
+        return when(state) {
+            is FilterState.ByMessage -> database.logEntryDao().getLogsWithMessage(state.category, state.query)
+            is FilterState.ByTag -> database.logEntryDao().getLogsWithTag(state.category, state.query)
+            is FilterState.BySeverity -> database.logEntryDao().getLogsWithTag(state.category, state.query)
+            is FilterState.Disabled -> getChronologicallySortedLogEntries(state.category)
+        }
     }
 }

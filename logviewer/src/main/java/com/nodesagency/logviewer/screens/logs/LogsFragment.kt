@@ -3,6 +3,7 @@ package com.nodesagency.logviewer.screens.logs
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -13,12 +14,13 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
 import com.nodesagency.logviewer.data.model.Category
+import com.nodesagency.logviewer.domain.FilterState
 import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
 import kotlinx.android.synthetic.main.fragment_logs.*
 
 private const val ARGUMENT_CATEGORY = "category"
 
-internal class LogsFragment : Fragment() {
+internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
     private lateinit var logEntriesRecyclerView: RecyclerView
 
     private lateinit var logEntriesAdapter: LogEntriesAdapter
@@ -28,6 +30,9 @@ internal class LogsFragment : Fragment() {
     private lateinit var onLogSelectListener: OnLogSelectListener
 
     private var searchViewMenuItem: MenuItem? = null
+
+    private val searchView: SearchView?
+        get() = (searchViewMenuItem?.actionView as SearchView?)
 
     companion object {
         fun newInstance(category: Category) = LogsFragment().apply {
@@ -60,7 +65,9 @@ internal class LogsFragment : Fragment() {
         inflater?.inflate(R.menu.menu_logs, menu)
         searchViewMenuItem = menu?.findItem(R.id.actionSearch)
         filtersRadioGroup.check(R.id.filterMessage)
-        (searchViewMenuItem?.actionView as SearchView?)?.let { searchView ->
+        searchView?.let { searchView ->
+
+            searchView.setOnQueryTextListener(this)
 
             searchView.setOnSearchClickListener {
                 toggleFilters(true)
@@ -70,8 +77,8 @@ internal class LogsFragment : Fragment() {
                 toggleFilters(false)
                 return@setOnCloseListener true
             }
-
         }
+
     }
 
 
@@ -81,7 +88,7 @@ internal class LogsFragment : Fragment() {
             searchViewMenuItem?.expandActionView()
         } else {
             filtersRadioGroup.visibility = View.GONE
-            (searchViewMenuItem?.actionView as SearchView?)?.let {
+            searchView?.let {
                 it.setQuery("", true)
                 it.onActionViewCollapsed()
             }
@@ -129,6 +136,27 @@ internal class LogsFragment : Fragment() {
         logEntriesViewModel
             .logEntryList
             .observe(this, Observer(logEntriesAdapter::submitList))
+
+
+        filtersRadioGroup.setOnCheckedChangeListener { _, id ->
+            Log.d("Filter", "Radio checked")
+            when (id) {
+                R.id.filterSeverity -> logEntriesViewModel.filterBySeverity()
+                R.id.filterMessage -> logEntriesViewModel.filterByMessage()
+                R.id.filterTag -> logEntriesViewModel.filterByTag()
+            }
+        }
+
+    }
+
+    override fun onQueryTextSubmit(query: String?): Boolean {
+        return true
+    }
+
+    override fun onQueryTextChange(newText: String?): Boolean {
+        Log.d("Filter", "Text changed")
+        logEntriesViewModel.changeFilterQuery(newText ?: "")
+        return true
     }
 
     override fun onResume() {

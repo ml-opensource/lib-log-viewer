@@ -1,37 +1,53 @@
 package com.nodesagency.logviewer.screens.logs
 
+import android.util.Log
+import androidx.arch.core.util.Function
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
 import androidx.paging.LivePagedListBuilder
+import androidx.paging.PagedList
 import com.nodesagency.logviewer.data.LogRepository
+import com.nodesagency.logviewer.data.model.LogEntry
+import com.nodesagency.logviewer.domain.FilterState
 
 private const val PAGE_SIZE = 20
-private val DEFAULT_FILTER = LogEntriesViewModel.FilterState.ByTag("")
 
-internal class LogEntriesViewModel(categoryId: Long, logRepository: LogRepository) : ViewModel() {
+internal class LogEntriesViewModel(val categoryId: Long, logRepository: LogRepository) : ViewModel() {
 
-    private val logEntriesDataSource = logRepository.getChronologicallySortedLogEntries(categoryId)
+    private val defaultFilter = FilterState.Disabled(categoryId)
+    private val filterLiveData: MutableLiveData<FilterState> = MutableLiveData()
 
-    val logEntryList = LivePagedListBuilder(logEntriesDataSource, PAGE_SIZE).build()
+    val logEntryList: LiveData<PagedList<LogEntry>> = Transformations.switchMap(filterLiveData, Function { input ->
+        Log.d("Filter", "Transformation $input")
+        return@Function LivePagedListBuilder(logRepository.getLogsFilteredBy(input), PAGE_SIZE).build()
+    })
 
-
-    val filterLiveData: MutableLiveData<FilterState> = MutableLiveData()
-
-
-    fun setQuery(query: String) {
-        val state = filterLiveData.value ?: DEFAULT_FILTER
-        state.query = query
-        filterLiveData.postValue(state)
+    init {
+        filterLiveData.postValue(defaultFilter)
     }
 
 
-    sealed class FilterState(var query: String) {
-        class Disabled(query: String) : FilterState(query)
-        class ByMessage(query: String) : FilterState(query)
-        class ByTag(query: String) : FilterState(query)
-        class BySeverity(query: String) : FilterState(query)
+    fun filterByTag() {
+        val oldFilter = filterLiveData.value ?: defaultFilter
+        filterLiveData.postValue(FilterState.ByTag(oldFilter.category, oldFilter.query))
+    }
 
+    fun filterByMessage() {
+        val oldFilter = filterLiveData.value ?: defaultFilter
+        filterLiveData.postValue(FilterState.ByMessage(oldFilter.category, oldFilter.query))
+    }
 
+    fun filterBySeverity() {
+        val oldFilter = filterLiveData.value ?: defaultFilter
+        filterLiveData.postValue(FilterState.BySeverity(oldFilter.category, oldFilter.query))
+    }
+
+    fun changeFilterQuery(query: String) {
+        val oldFilter = filterLiveData.value ?: defaultFilter
+        oldFilter.query = query
+        filterLiveData.postValue(oldFilter)
     }
 
 }

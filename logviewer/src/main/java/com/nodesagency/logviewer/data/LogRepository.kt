@@ -1,10 +1,12 @@
 package com.nodesagency.logviewer.data
 
+import android.util.Log
 import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogDetails
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
+import com.nodesagency.logviewer.domain.FilterState
 
 
 interface LogRepository {
@@ -44,4 +46,7 @@ interface LogRepository {
     fun deleteAllCategoriesAndLogs()
 
     fun getLogDetails(logEntryId: Long): LogDetails
+
+
+    fun getLogsFilteredBy(state: FilterState) : DataSource.Factory<Int, LogEntry>
 }
