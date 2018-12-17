@@ -5,6 +5,7 @@ import android.view.View
 import androidx.appcompat.app.AppCompatActivity
 import com.nodesagency.logtestapp.generator.ExampleLogGenerator
 import com.nodesagency.logtestapp.generator.LogGenerator
+import com.nodesagency.logtestapp.generator.TimberLogGenerator
 import com.nodesagency.logviewer.LogViewerActivity
 import com.nodesagency.logviewer.Logger
 import kotlinx.android.synthetic.main.activity_main.*
@@ -18,7 +19,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        logGenerator = ExampleLogGenerator(
+        logGenerator = TimberLogGenerator(
             logCount = 1000,
             delayBetweenLogsMilliseconds = 500,
             undelayedInitialLogCount = 6

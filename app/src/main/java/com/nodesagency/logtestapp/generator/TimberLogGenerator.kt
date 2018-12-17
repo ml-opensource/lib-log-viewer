@@ -16,8 +16,15 @@ internal class TimberLogGenerator(
             .let { CommonSeverityLevels.values()[it].severity }
 
         Logger.category = randomCategory
-        Timber.log(severity.id?.toInt() ?: 0, "${severity.level} message at index $messageIndex")
+        Timber.log(severity.id?.toInt() ?: 0, throwable, "${severity.level} message at index $messageIndex")
     }
+
+    private val throwable: Throwable?
+        get() = if (Random.nextBoolean()) {
+            RuntimeException("Test Throwable")
+        } else {
+            null
+        }
 
     private val randomCategory: String
         get() = listOf(
