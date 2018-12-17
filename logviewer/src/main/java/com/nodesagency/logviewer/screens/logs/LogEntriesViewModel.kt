@@ -19,6 +19,7 @@ internal class LogEntriesViewModel(val categoryId: Long, logRepository: LogRepos
     private val defaultFilter = FilterState.Disabled(categoryId)
     val filterLiveData: MutableLiveData<FilterState> = MutableLiveData()
 
+
     val logEntryList: LiveData<PagedList<LogEntry>> = Transformations.switchMap(filterLiveData, Function { input ->
         return@Function LivePagedListBuilder(logRepository.getLogsFilteredBy(input), PAGE_SIZE).build()
     })

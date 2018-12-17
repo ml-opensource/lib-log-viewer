@@ -18,7 +18,7 @@ internal interface LogEntryDao {
     @Insert
     fun insert(entry: LogEntry)
 
-    @Query("SELECT * FROM LogEntries WHERE (lower(message) LIKE :severityQuery)  AND categoryId = :categoryId ORDER BY timestampMilliseconds")
+    @Query("SELECT * FROM LogEntries   INNER JOIN Severities sev ON severityId = sev.id WHERE (lower(level) LIKE :severityQuery) AND categoryId = :categoryId ORDER BY timestampMilliseconds")
     fun getLogsWithSeverity(categoryId: Long, severityQuery: String) : DataSource.Factory<Int, LogEntry>
 
     @Query("SELECT * FROM LogEntries WHERE (lower(message) LIKE :messageQuery) AND categoryId = :categoryId ORDER BY timestampMilliseconds")
