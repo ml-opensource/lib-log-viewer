@@ -49,4 +49,6 @@ interface LogRepository {
 
 
     fun getLogsFilteredBy(state: FilterState) : DataSource.Factory<Int, LogEntry>
+
+    fun getCategoriesByName(name: String) : DataSource.Factory<Int, Category>
 }

@@ -2,9 +2,8 @@ package com.nodesagency.logviewer.screens.categories
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -23,6 +22,12 @@ internal class CategoriesFragment : Fragment() {
     private lateinit var categoriesViewModel: CategoriesViewModel
     private lateinit var onCategorySelectListener: OnCategorySelectListener
 
+    private var searchMenuItem: MenuItem? = null
+
+    private val searchView: SearchView?
+        get() = (searchMenuItem?.actionView as SearchView?)
+
+
     companion object {
         fun newInstance() = CategoriesFragment().apply {
             arguments = Bundle()
@@ -38,7 +43,7 @@ internal class CategoriesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
         categoriesViewModel = ViewModelProviders
             .of(this, CategoriesViewModelFactory(Logger.getRepository()))
             .get(CategoriesViewModel::class.java)
@@ -66,6 +71,28 @@ internal class CategoriesFragment : Fragment() {
         categoriesViewModel
             .categoryList
             .observe(this, Observer(categoriesAdapter::submitList))
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_categories, menu)
+        searchMenuItem = menu?.findItem(R.id.actionSearch)
+
+
+        categoriesViewModel.queryLiveData.value?.let {
+            searchView?.setQuery(it, false)
+        }
+
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                categoriesViewModel.changeCategoriesQuery(newText ?: "")
+                return true
+            }
+        })
     }
 
     override fun onResume() {

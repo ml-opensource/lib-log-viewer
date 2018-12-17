@@ -90,4 +90,11 @@ internal class DatabaseLogRepository(
             is FilterState.Disabled -> getChronologicallySortedLogEntries(state.category)
         }
     }
+
+    override fun getCategoriesByName(name: String): DataSource.Factory<Int, Category> {
+        return when {
+            name.isEmpty() ->  database.categoryDao().getAlphabeticallySortedCategories()
+            else ->  database.categoryDao().getCategoriesByName("%$name%")
+        }
+    }
 }
