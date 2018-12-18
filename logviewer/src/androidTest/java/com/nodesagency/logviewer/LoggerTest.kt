@@ -19,6 +19,7 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import java.util.*
 
 @RunWith(AndroidJUnit4::class)
 class LoggerTest {
@@ -159,6 +160,40 @@ class LoggerTest {
 
         assertTrue(messages1.isEmpty())
         assertTrue(messages2.isEmpty())
+    }
+
+    @Test
+    fun log_details() {
+        val message = "message"
+        val severity = "severity"
+        val tag = "tag"
+        val category = "category"
+        val acceptableDelta = 1000L
+
+        try {
+            throw RuntimeException("exception")
+        } catch (t: Throwable) {
+            Logger.log(
+                message = message,
+                severityLevel = severity,
+                tag = tag,
+                categoryName = category,
+                throwable = t
+            )
+
+            val categoryId = logRepository.getIdForCategoryName(category)
+            val severityId = logRepository.getIdForSeverityLevel(severity)
+            val messages = logRepository.getLogEntriesForCategoryId(categoryId!!)
+
+            assertEquals(message, messages[0].message)
+            assertEquals(severityId, messages[0].severityId)
+            assertEquals(tag, messages[0].tag)
+            assertEquals(categoryId, messages[0].categoryId)
+
+            assertTrue(Math.abs(Date().time - messages[0].timestampMilliseconds) < acceptableDelta)
+
+            t.stackTrace.forEach { assertTrue(messages[0].stackTrace!!.contains(it.toString())) }
+        }
     }
 
     private fun runDeinitialized(run: () -> Unit) {
