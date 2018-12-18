@@ -30,6 +30,7 @@ android {
 dependencies {
     final def ROOM_VERSION = "2.0.0"
     final def PAGING_VERSION = "2.0.0"
+    final def ARCH_TESTING_VERSION = "2.0.0"
 
     implementation fileTree(dir: 'libs', include: ['*.jar'])
 
@@ -47,5 +48,6 @@ dependencies {
     testImplementation "junit:junit:4.12"
     testImplementation "androidx.room:room-testing:$ROOM_VERSION"
 
+    androidTestImplementation "androidx.arch.core:core-testing:$ARCH_TESTING_VERSION"
     androidTestImplementation "com.android.support.test:runner:1.0.2"
 }
