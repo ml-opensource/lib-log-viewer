@@ -2,17 +2,13 @@ package com.nodesagency.logviewer.data.database
 
 import android.content.Context
 import android.net.Uri
-import android.util.Log
 import androidx.paging.DataSource
-import com.nodesagency.logviewer.concurrency.CoroutineScopeProvider
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogDetails
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
-import com.nodesagency.logviewer.domain.FilterState
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.async
+import com.nodesagency.logviewer.domain.Filter
 
 internal class DatabaseLogRepository(
     private val context: Context,
@@ -82,13 +78,13 @@ internal class DatabaseLogRepository(
     }
 
 
-    override fun getLogsFilteredBy(state: FilterState): DataSource.Factory<Int, LogEntry> {
-        if (state.query.isEmpty()) return getChronologicallySortedLogEntries(state.category)
-        return when (state) {
-            is FilterState.ByMessage -> database.logEntryDao().getLogsWithMessage(state.category, state.toQuery())
-            is FilterState.ByTag -> database.logEntryDao().getLogsWithTag(state.category, state.toQuery())
-            is FilterState.BySeverity -> database.logEntryDao().getLogsWithSeverity(state.category, state.toQuery())
-            is FilterState.Disabled -> getChronologicallySortedLogEntries(state.category)
+    override fun getLogsFilteredBy(filter: Filter): DataSource.Factory<Int, LogEntry> {
+        if (filter.query.isEmpty()) return getChronologicallySortedLogEntries(filter.category)
+        return when (filter) {
+            is Filter.ByMessage -> database.logEntryDao().getLogsWithMessage(filter.category, filter.toQuery())
+            is Filter.ByTag -> database.logEntryDao().getLogsWithTag(filter.category, filter.toQuery())
+            is Filter.BySeverity -> database.logEntryDao().getLogsWithSeverity(filter.category, filter.toQuery())
+            is Filter.Disabled -> getChronologicallySortedLogEntries(filter.category)
         }
     }
 

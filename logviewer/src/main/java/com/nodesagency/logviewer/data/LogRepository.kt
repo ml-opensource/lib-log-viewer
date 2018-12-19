@@ -1,13 +1,12 @@
 package com.nodesagency.logviewer.data
 
 import android.net.Uri
-import android.util.Log
 import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogDetails
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
-import com.nodesagency.logviewer.domain.FilterState
+import com.nodesagency.logviewer.domain.Filter
 
 
 interface LogRepository {
@@ -50,12 +49,12 @@ interface LogRepository {
     fun getLogDetails(logEntryId: Long): LogDetails
 
 
-    fun getLogsFilteredBy(state: FilterState) : DataSource.Factory<Int, LogEntry>
+    fun getLogsFilteredBy(filter: Filter) : DataSource.Factory<Int, LogEntry>
 
     fun getCategoriesByName(name: String) : DataSource.Factory<Int, Category>
 
     /**
-     * @return content URI for the copy of repository backing storage ( such as .db files etc ) if available
+     * @return content URI for the copy of repository backing storage ( such as .db files etc) if available
      * null otherwise
      */
     fun getShareableCopyUri() : Uri?

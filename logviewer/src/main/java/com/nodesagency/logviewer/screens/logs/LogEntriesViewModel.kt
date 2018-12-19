@@ -1,6 +1,5 @@
 package com.nodesagency.logviewer.screens.logs
 
-import android.util.Log
 import androidx.arch.core.util.Function
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -10,14 +9,14 @@ import androidx.paging.LivePagedListBuilder
 import androidx.paging.PagedList
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.LogEntry
-import com.nodesagency.logviewer.domain.FilterState
+import com.nodesagency.logviewer.domain.Filter
 
 private const val PAGE_SIZE = 20
 
 internal class LogEntriesViewModel(val categoryId: Long, logRepository: LogRepository) : ViewModel() {
 
-    private val defaultFilter = FilterState.Disabled(categoryId)
-    val filterLiveData: MutableLiveData<FilterState> = MutableLiveData()
+    private val defaultFilter = Filter.Disabled(categoryId)
+    val filterLiveData: MutableLiveData<Filter> = MutableLiveData()
 
 
     val logEntryList: LiveData<PagedList<LogEntry>> = Transformations.switchMap(filterLiveData, Function { input ->
@@ -31,17 +30,17 @@ internal class LogEntriesViewModel(val categoryId: Long, logRepository: LogRepos
 
     fun filterByTag() {
         val oldFilter = filterLiveData.value ?: defaultFilter
-        filterLiveData.postValue(FilterState.ByTag(oldFilter.category, oldFilter.query))
+        filterLiveData.postValue(Filter.ByTag(oldFilter.category, oldFilter.query))
     }
 
     fun filterByMessage() {
         val oldFilter = filterLiveData.value ?: defaultFilter
-        filterLiveData.postValue(FilterState.ByMessage(oldFilter.category, oldFilter.query))
+        filterLiveData.postValue(Filter.ByMessage(oldFilter.category, oldFilter.query))
     }
 
     fun filterBySeverity() {
         val oldFilter = filterLiveData.value ?: defaultFilter
-        filterLiveData.postValue(FilterState.BySeverity(oldFilter.category, oldFilter.query))
+        filterLiveData.postValue(Filter.BySeverity(oldFilter.category, oldFilter.query))
     }
 
     fun changeFilterQuery(query: String) {

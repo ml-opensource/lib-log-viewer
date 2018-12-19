@@ -82,7 +82,7 @@ internal class CategoriesFragment : Fragment() {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_categories, menu)
-        val shareStorageFileItem = menu?.findItem(R.id.actionShareStorageCopy)
+        val shareStorageFileItem = menu?.findItem(R.id.actionShareLogsDump)
         val shareOptionsItem = menu?.findItem(R.id.actionShareOptions)
         shareStorageFileItem?.isVisible = categoriesViewModel.storageCopyUriLiveData.value != null
         shareOptionsItem?.isVisible = categoriesViewModel.storageCopyUriLiveData.value != null
@@ -91,7 +91,7 @@ internal class CategoriesFragment : Fragment() {
 
     override fun onPrepareOptionsMenu(menu: Menu?) {
         super.onPrepareOptionsMenu(menu)
-        searchMenuItem = menu?.findItem(R.id.actionSearch)
+        searchMenuItem = menu?.findItem(R.id.actionFilter)
 
 
         categoriesViewModel.queryLiveData.value?.let {
@@ -112,7 +112,7 @@ internal class CategoriesFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item?.itemId) {
-            R.id.actionShareStorageCopy -> {
+            R.id.actionShareLogsDump -> {
                 val uri  = categoriesViewModel.storageCopyUriLiveData.value ?: return true
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     putExtra(Intent.EXTRA_STREAM, uri)

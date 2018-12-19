@@ -2,7 +2,7 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
-    <item android:id="@+id/actionSearch"
+    <item android:id="@+id/actionFilter"
         android:title="@string/action_search"
         android:icon="@android:drawable/ic_menu_search"
         app:showAsAction="always"
@@ -16,8 +16,8 @@
 
         <menu>
             <item
-                android:id="@+id/actionShareStorageCopy"
-                android:title="@string/action_share_storage_file"/>
+                android:id="@+id/actionShareLogsDump"
+                android:title="@string/action_share_log_dump"/>
         </menu>
 
     </item>

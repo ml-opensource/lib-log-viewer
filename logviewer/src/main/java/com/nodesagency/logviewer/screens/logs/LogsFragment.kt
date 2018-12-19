@@ -3,7 +3,6 @@ package com.nodesagency.logviewer.screens.logs
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
@@ -14,7 +13,7 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
 import com.nodesagency.logviewer.data.model.Category
-import com.nodesagency.logviewer.domain.FilterState
+import com.nodesagency.logviewer.domain.Filter
 import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
 import kotlinx.android.synthetic.main.fragment_logs.*
 
@@ -99,7 +98,7 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_logs, menu)
-        searchViewMenuItem = menu?.findItem(R.id.actionSearch)
+        searchViewMenuItem = menu?.findItem(R.id.actionFilter)
 
     }
 
@@ -109,16 +108,16 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
         activity?.invalidateOptionsMenu()
         logEntriesViewModel.filterLiveData.value?.let {
             when(it) {
-                is FilterState.BySeverity -> {
+                is Filter.BySeverity -> {
                     toggleFilters(true, R.id.filterSeverity)
                 }
-                is FilterState.ByMessage -> {
+                is Filter.ByMessage -> {
                     toggleFilters(true, R.id.filterMessage)
                 }
-                is FilterState.ByTag -> {
+                is Filter.ByTag -> {
                     toggleFilters(true, R.id.filterSeverity)
                 }
-                is FilterState.Disabled -> {
+                is Filter.Disabled -> {
                     toggleFilters(false)
                     filtersRadioGroup.clearCheck()
                 }
@@ -141,15 +140,11 @@ internal class LogsFragment : Fragment(), SearchView.OnQueryTextListener {
 
         }
 
-
-
     }
-
-
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when (item?.itemId) {
-            R.id.logsCategoryShare -> {
+            R.id.actionShareLogsCategory -> {
                 val shareMessage = "Logs from ${category.name} category\n" +
                         logEntriesViewModel.logEntryList.value?.joinToString("\n") {it.toShareMessage()}
                 val sendIntent: Intent = Intent().apply {
