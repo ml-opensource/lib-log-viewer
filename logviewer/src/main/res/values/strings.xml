@@ -10,4 +10,7 @@
     <string name="share_log_message">Send log</string>
 
     <string name="share_file_message">Share file using</string>
+    <string name="filter_by_message">By Message</string>
+    <string name="filter_by_tag">By Tag</string>
+    <string name="filter_by_severity">By Severity</string>
 </resources>
