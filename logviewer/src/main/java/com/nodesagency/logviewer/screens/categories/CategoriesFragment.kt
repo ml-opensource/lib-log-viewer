@@ -119,7 +119,7 @@ internal class CategoriesFragment : Fragment() {
                     type = "*/*"
 
                 }
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_file_message)))
+                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_logs_dump_message)))
                 true
             }
             else -> super.onOptionsItemSelected(item)
