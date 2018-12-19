@@ -1,5 +1,6 @@
 package com.nodesagency.logviewer.data
 
+import android.net.Uri
 import android.util.Log
 import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.model.Category
@@ -10,6 +11,7 @@ import com.nodesagency.logviewer.domain.FilterState
 
 
 interface LogRepository {
+
 
     fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category>
 
@@ -51,4 +53,11 @@ interface LogRepository {
     fun getLogsFilteredBy(state: FilterState) : DataSource.Factory<Int, LogEntry>
 
     fun getCategoriesByName(name: String) : DataSource.Factory<Int, Category>
+
+    /**
+     * @return content URI for the copy of repository backing storage ( such as .db files etc ) if available
+     * null otherwise
+     */
+    fun getShareableCopyUri() : Uri?
+
 }

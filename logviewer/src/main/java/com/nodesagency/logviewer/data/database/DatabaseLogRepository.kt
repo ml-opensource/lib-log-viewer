@@ -1,6 +1,7 @@
 package com.nodesagency.logviewer.data.database
 
 import android.content.Context
+import android.net.Uri
 import android.util.Log
 import androidx.paging.DataSource
 import com.nodesagency.logviewer.concurrency.CoroutineScopeProvider
@@ -96,5 +97,9 @@ internal class DatabaseLogRepository(
             name.isEmpty() ->  database.categoryDao().getAlphabeticallySortedCategories()
             else ->  database.categoryDao().getCategoriesByName("%$name%")
         }
+    }
+
+    override fun getShareableCopyUri(): Uri? {
+        return LogDatabase.getDatabaseCopyUri(context)
     }
 }

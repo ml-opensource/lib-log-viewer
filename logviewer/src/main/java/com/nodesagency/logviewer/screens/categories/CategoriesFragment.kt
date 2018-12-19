@@ -13,14 +13,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
-import com.nodesagency.logviewer.data.database.DATABASE_NAME
 import android.content.Intent
-import android.net.Uri
-import androidx.core.content.FileProvider
-import com.nodesagency.logviewer.BuildConfig
-import java.io.File
-import java.io.FileInputStream
-import java.io.FileOutputStream
 
 
 internal class CategoriesFragment : Fragment() {
@@ -80,11 +73,19 @@ internal class CategoriesFragment : Fragment() {
         categoriesViewModel
             .categoryList
             .observe(this, Observer(categoriesAdapter::submitList))
+
+        categoriesViewModel.storageCopyUriLiveData.observe(this, Observer {
+            activity?.invalidateOptionsMenu()
+        })
     }
 
     override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_categories, menu)
+        val shareStorageFileItem = menu?.findItem(R.id.actionShareStorageCopy)
+        val shareOptionsItem = menu?.findItem(R.id.actionShareOptions)
+        shareStorageFileItem?.isVisible = categoriesViewModel.storageCopyUriLiveData.value != null
+        shareOptionsItem?.isVisible = categoriesViewModel.storageCopyUriLiveData.value != null
 
     }
 
@@ -111,9 +112,8 @@ internal class CategoriesFragment : Fragment() {
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         return when(item?.itemId) {
-            R.id.actionShareDb -> {
-                val dbPath = context?.getDatabasePath(DATABASE_NAME) ?: return true
-                val uri  = createDbCopy(dbPath)
+            R.id.actionShareStorageCopy -> {
+                val uri  = categoriesViewModel.storageCopyUriLiveData.value ?: return true
                 val shareIntent = Intent(Intent.ACTION_SEND).apply {
                     putExtra(Intent.EXTRA_STREAM, uri)
                     type = "*/*"
@@ -124,16 +124,6 @@ internal class CategoriesFragment : Fragment() {
             }
             else -> super.onOptionsItemSelected(item)
         }
-    }
-
-    private fun createDbCopy(dbFile: File) : Uri {
-        val dbCopy = File(context?.filesDir, "database.db")
-        val input = FileInputStream(dbFile).channel
-        val output = FileOutputStream(dbCopy).channel
-        input.transferTo(0, input.size(), output)
-        input.close()
-        output.close()
-        return  FileProvider.getUriForFile(context!!, "${BuildConfig.APPLICATION_ID}.fileprovider", dbCopy)
     }
 
     override fun onResume() {

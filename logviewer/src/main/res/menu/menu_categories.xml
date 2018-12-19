@@ -9,14 +9,15 @@
         app:actionViewClass="androidx.appcompat.widget.SearchView" />
 
     <item
+        android:id="@+id/actionShareOptions"
         app:showAsAction="ifRoom"
         android:icon="@drawable/ic_share"
         android:title="@string/action_share">
 
         <menu>
             <item
-                android:id="@+id/actionShareDb"
-                android:title="@string/action_share_db_file"/>
+                android:id="@+id/actionShareStorageCopy"
+                android:title="@string/action_share_storage_file"/>
         </menu>
 
     </item>
