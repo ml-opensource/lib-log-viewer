@@ -25,6 +25,10 @@ android {
         }
     }
 
+    packagingOptions {
+        exclude 'META-INF/main.kotlin_module'
+    }
+
 }
 
 dependencies {
@@ -48,4 +52,6 @@ dependencies {
     testImplementation "androidx.room:room-testing:$ROOM_VERSION"
 
     androidTestImplementation "com.android.support.test:runner:1.0.2"
+    androidTestImplementation 'org.jetbrains.kotlin:kotlin-test-junit:1.2.40'
+
 }
