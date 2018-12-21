@@ -4,4 +4,5 @@ import com.nodesagency.logviewer.data.model.Category
 
 internal interface OnCategorySelectListener {
     fun onCategorySelected(category: Category)
+    fun onCategoryPinButtonPressed(category: Category)
 }

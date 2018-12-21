@@ -14,14 +14,15 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
+import com.nodesagency.logviewer.data.model.Category
 
-internal class CategoriesFragment : Fragment() {
+internal class CategoriesFragment : Fragment(), OnCategorySelectListener {
 
     private lateinit var categoriesRecyclerView: RecyclerView
     private lateinit var categoriesAdapter: CategoriesAdapter
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var categoriesViewModel: CategoriesViewModel
-    private lateinit var onCategorySelectListener: OnCategorySelectListener
+    private lateinit var oCategoryFragmentListener: CategoriesFragmentListener
 
     companion object {
         fun newInstance() = CategoriesFragment().apply {
@@ -32,8 +33,8 @@ internal class CategoriesFragment : Fragment() {
     override fun onAttach(context: Context) {
         super.onAttach(context)
 
-        onCategorySelectListener = context as? OnCategorySelectListener
-                ?: throw ClassCastException("Context must implement OnCategorySelectListener.")
+        oCategoryFragmentListener = context as? CategoriesFragmentListener
+                ?: throw ClassCastException("Context must implement OnCategoriesFragmentListener.")
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -70,8 +71,15 @@ internal class CategoriesFragment : Fragment() {
 
     override fun onResume() {
         super.onResume()
+        categoriesAdapter.onCategorySelectListener = this
+    }
 
-        categoriesAdapter.onCategorySelectListener = onCategorySelectListener
+    override fun onCategorySelected(category: Category) {
+        oCategoryFragmentListener.onCategorySelected(category)
+    }
+
+    override fun onCategoryPinButtonPressed(category: Category) {
+        categoriesViewModel.pinCategory(category)
     }
 
     override fun onPause() {
@@ -79,4 +87,9 @@ internal class CategoriesFragment : Fragment() {
 
         categoriesAdapter.onCategorySelectListener = null
     }
+
+    interface CategoriesFragmentListener {
+        fun onCategorySelected(category: Category)
+    }
+
 }
