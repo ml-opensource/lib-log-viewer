@@ -22,4 +22,10 @@ internal class CategoriesViewModel(val logRepository: LogRepository) : ViewModel
         }
     }
 
+    fun clearAllLogs() {
+        GlobalScope.launch {
+            logRepository.deleteAllCategoriesAndLogs()
+        }
+    }
+
 }

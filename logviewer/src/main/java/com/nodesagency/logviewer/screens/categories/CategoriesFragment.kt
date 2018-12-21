@@ -1,10 +1,10 @@
 package com.nodesagency.logviewer.screens.categories
 
+import android.app.AlertDialog
 import android.content.Context
+import android.content.DialogInterface
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -40,6 +40,7 @@ internal class CategoriesFragment : Fragment(), OnCategorySelectListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        setHasOptionsMenu(true)
         categoriesViewModel = ViewModelProviders
             .of(this, CategoriesViewModelFactory(Logger.getRepository()))
             .get(CategoriesViewModel::class.java)
@@ -61,12 +62,37 @@ internal class CategoriesFragment : Fragment(), OnCategorySelectListener {
         return view
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_categories, menu)
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         categoriesViewModel
             .categoryList
             .observe(this, Observer(categoriesAdapter::submitList))
+    }
+
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when(item?.itemId) {
+            R.id.actionClearLogs -> {
+                showDeleteLogsConfirmation()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
+    }
+
+    private fun showDeleteLogsConfirmation() {
+        AlertDialog.Builder(context)
+            .setTitle(R.string.clear_logs_dialog_title)
+            .setMessage(R.string.clear_logs_dialog_message)
+            .setNegativeButton(android.R.string.cancel) { dialogInterface, _ -> dialogInterface.dismiss() }
+            .setPositiveButton(android.R.string.yes) {_, _ -> categoriesViewModel.clearAllLogs()}
+            .show()
     }
 
     override fun onResume() {

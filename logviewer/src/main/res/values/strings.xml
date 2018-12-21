@@ -5,4 +5,9 @@
     <string name="action_share">Share</string>
     <string name="share_category_message">Share logs category</string>
     <string name="share_log_message">Send log</string>
+    <string name="action_clear_all_logs">Clear All Logs</string>
+
+    <string name="clear_logs_dialog_title">Clear all logs?</string>
+    <string name="clear_logs_dialog_message">Are you sure? This action will delete all the logs and categories</string>
+
 </resources>
