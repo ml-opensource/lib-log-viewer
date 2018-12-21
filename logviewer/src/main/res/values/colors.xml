@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <color name="colorPrimary">#008577</color>
     <color name="severity_gray">#f8f8f8</color>
     <color name="severity_blue">#e6f5ff</color>
     <color name="severity_green">#e6ffe6</color>
