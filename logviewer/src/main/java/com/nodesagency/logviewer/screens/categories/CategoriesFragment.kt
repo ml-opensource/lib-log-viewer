@@ -2,9 +2,8 @@ package com.nodesagency.logviewer.screens.categories
 
 import android.content.Context
 import android.os.Bundle
-import android.view.LayoutInflater
-import android.view.View
-import android.view.ViewGroup
+import android.view.*
+import androidx.appcompat.widget.SearchView
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -14,6 +13,10 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
+import android.content.Intent
+import android.net.Uri
+import kotlinx.android.synthetic.main.fragment_categories.*
+
 
 internal class CategoriesFragment : Fragment() {
 
@@ -22,6 +25,12 @@ internal class CategoriesFragment : Fragment() {
     private lateinit var layoutManager: RecyclerView.LayoutManager
     private lateinit var categoriesViewModel: CategoriesViewModel
     private lateinit var onCategorySelectListener: OnCategorySelectListener
+
+    private var searchMenuItem: MenuItem? = null
+
+    private val searchView: SearchView?
+        get() = (searchMenuItem?.actionView as SearchView?)
+
 
     companion object {
         fun newInstance() = CategoriesFragment().apply {
@@ -38,7 +47,7 @@ internal class CategoriesFragment : Fragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
+        setHasOptionsMenu(true)
         categoriesViewModel = ViewModelProviders
             .of(this, CategoriesViewModelFactory(Logger.getRepository()))
             .get(CategoriesViewModel::class.java)
@@ -66,6 +75,61 @@ internal class CategoriesFragment : Fragment() {
         categoriesViewModel
             .categoryList
             .observe(this, Observer(categoriesAdapter::submitList))
+
+        categoriesViewModel.storageCopyUriLiveData.observe(this, Observer {
+           shareFile(it)
+        })
+
+        categoriesViewModel.allLogsFileUri.observe(this, Observer {
+           shareFile(it)
+        })
+
+        categoriesViewModel.loadingLiveData.observe(this, Observer {
+            progressBar.visibility = if (it) View.VISIBLE else View.GONE
+        })
+    }
+
+    override fun onCreateOptionsMenu(menu: Menu?, inflater: MenuInflater?) {
+        super.onCreateOptionsMenu(menu, inflater)
+        inflater?.inflate(R.menu.menu_categories, menu)
+        val shareStorageFileItem = menu?.findItem(R.id.actionShareLogsDump)
+        shareStorageFileItem?.isVisible = categoriesViewModel.backingStorageAvailableLiveData.value ?: false
+
+    }
+
+    override fun onPrepareOptionsMenu(menu: Menu?) {
+        super.onPrepareOptionsMenu(menu)
+        searchMenuItem = menu?.findItem(R.id.actionFilter)
+
+
+        categoriesViewModel.queryLiveData.value?.let {
+            searchView?.setQuery(it, false)
+        }
+
+        searchView?.setOnQueryTextListener(object : SearchView.OnQueryTextListener {
+            override fun onQueryTextSubmit(query: String?): Boolean {
+                return true
+            }
+
+            override fun onQueryTextChange(newText: String?): Boolean {
+                categoriesViewModel.changeCategoriesQuery(newText ?: "")
+                return true
+            }
+        })
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
+        return when (item?.itemId) {
+            R.id.actionShareLogsDump -> {
+                categoriesViewModel.loadBackingStorageFile()
+                true
+            }
+            R.id.actionShareAllLogs -> {
+                categoriesViewModel.loadAllLogsFileUri()
+                true
+            }
+            else -> super.onOptionsItemSelected(item)
+        }
     }
 
     override fun onResume() {
@@ -79,4 +143,15 @@ internal class CategoriesFragment : Fragment() {
 
         categoriesAdapter.onCategorySelectListener = null
     }
+
+    private fun shareFile(uri: Uri?) {
+        uri ?: return
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = "*/*"
+
+        }
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_file_chooser_message)))
+    }
+
 }

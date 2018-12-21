@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+
+    <item android:id="@+id/actionFilter"
+        android:title="@string/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
+
+    <item
+        android:id="@+id/actionShareOptions"
+        app:showAsAction="ifRoom"
+        android:icon="@drawable/ic_share"
+        android:title="@string/action_share">
+
+        <menu>
+            <item
+                android:id="@+id/actionShareLogsDump"
+                android:title="@string/action_share_log_dump"/>
+
+            <item
+                android:title="@string/share_all_logs"
+                android:id="@+id/actionShareAllLogs"/>
+
+        </menu>
+
+
+    </item>
+
+</menu>

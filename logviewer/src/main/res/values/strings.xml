@@ -2,7 +2,16 @@
     <string name="title_log_categories">Log categories</string>
     <string name="tagTitle">Tag:</string>
     <string name="severityTitle">Severity:</string>
+
+    <string name="action_search">Search</string>
     <string name="action_share">Share</string>
+    <string name="action_share_log_dump">Send storage copy file</string>
     <string name="share_category_message">Share logs category</string>
     <string name="share_log_message">Send log</string>
+
+    <string name="share_file_chooser_message">Share file using</string>
+    <string name="filter_by_message">By Message</string>
+    <string name="filter_by_tag">By Tag</string>
+    <string name="filter_by_severity">By Severity</string>
+    <string name="share_all_logs">Share All Logs</string>
 </resources>

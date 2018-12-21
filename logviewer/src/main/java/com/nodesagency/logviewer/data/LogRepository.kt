@@ -1,13 +1,16 @@
 package com.nodesagency.logviewer.data
 
+import android.net.Uri
 import androidx.paging.DataSource
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogDetails
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
+import com.nodesagency.logviewer.domain.Filter
 
 
 interface LogRepository {
+
 
     fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category>
 
@@ -44,4 +47,28 @@ interface LogRepository {
     fun deleteAllCategoriesAndLogs()
 
     fun getLogDetails(logEntryId: Long): LogDetails
+
+
+    fun getLogsFilteredBy(filter: Filter) : DataSource.Factory<Int, LogEntry>
+
+    fun getCategoriesByName(name: String) : DataSource.Factory<Int, Category>
+
+    /**
+     * @return content URI for the copy of repository backing storage ( such as .db files etc) if available
+     *
+     */
+    fun getShareableCopyUri() : Uri?
+
+
+    /**
+     * @return content URI for the file with all the logs from all categories
+     */
+    fun getAllLogsFileUri() : Uri?
+
+
+    /**
+     * @returns true if repository is able to provide copy pf backing storage
+     * false otherwise
+     */
+    fun isBackingStorageCopyAvailable() : Boolean
 }

@@ -2,8 +2,13 @@
 <menu xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
+    <item android:id="@+id/actionFilter"
+        android:title="@string/action_search"
+        android:icon="@android:drawable/ic_menu_search"
+        app:showAsAction="always"
+        app:actionViewClass="androidx.appcompat.widget.SearchView" />
     <item
-        android:id="@+id/logsCategoryShare"
+        android:id="@+id/actionShareLogsCategory"
         app:showAsAction="always"
         android:title="@string/action_share"/>
 

@@ -16,6 +16,9 @@ internal interface CategoryDao {
     @Query("SELECT * FROM Categories ORDER BY name ASC")
     fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category>
 
+    @Query("SELECT * FROM Categories WHERE (name LIKE :name)")
+    fun getCategoriesByName(name: String) : DataSource.Factory<Int, Category>
+
     @Query("SELECT * FROM Categories WHERE name = :name LIMIT 1")
     fun getCategoryWithName(name: String): Category?
 
@@ -24,5 +27,8 @@ internal interface CategoryDao {
 
     @Query("DELETE FROM Categories")
     fun deleteAllCategories()
+
+    @Query("SELECT * FROM Categories")
+    fun getAllCategories() : List<Category>
 
 }
