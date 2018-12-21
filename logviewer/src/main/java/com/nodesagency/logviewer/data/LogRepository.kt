@@ -44,4 +44,6 @@ interface LogRepository {
     fun deleteAllCategoriesAndLogs()
 
     fun getLogDetails(logEntryId: Long): LogDetails
+
+    fun pinCategory(categoryId: Long, isPinned: Boolean)
 }

@@ -74,4 +74,8 @@ internal class DatabaseLogRepository(
             .logDetailsDao()
             .getLogDetails(logEntryId)
     }
+
+    override fun pinCategory(categoryId: Long, isPinned: Boolean) {
+        database.categoryDao().updatePinnedValue(categoryId, isPinned)
+    }
 }
