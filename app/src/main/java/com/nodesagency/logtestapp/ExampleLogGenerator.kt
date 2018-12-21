@@ -57,7 +57,8 @@ internal class ExampleLogGenerator(
             "LoggedActivity",
             "LoggedFragment",
             "TestTag",
-            "YetAnotherTag"
+            "YetAnotherTag",
+            "YetAnotherTagButItsVeeeeryVeeeeeeryLong"
         ).random()
     }
 
@@ -88,7 +89,10 @@ internal class ExampleLogGenerator(
     }
 
     private fun getRandomSeverityLevel(): String {
-        val commonSeverities = CommonSeverityLevels.values().map { it.severity }
+        val commonSeverities = CommonSeverityLevels.values()
+            .map { it.severity }
+            .toMutableList()
+            .also { it.add(Severity(id = 7, level = "ForSomeReasonTheresAlsoAVertLongSevereryLevel")) }
         val severityTypeCount = commonSeverities.size
 
         return Random

@@ -1,10 +1,7 @@
 package com.nodesagency.logviewer.data.database.daos
 
 import androidx.paging.DataSource
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.nodesagency.logviewer.data.model.Category
 
 @Dao
@@ -13,7 +10,7 @@ internal interface CategoryDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insert(category: Category): Long
 
-    @Query("SELECT * FROM Categories ORDER BY name ASC")
+    @Query("SELECT * FROM Categories ORDER BY isPinned DESC, name ASC")
     fun getAlphabeticallySortedCategories(): DataSource.Factory<Int, Category>
 
     @Query("SELECT * FROM Categories WHERE name = :name LIMIT 1")
@@ -24,5 +21,9 @@ internal interface CategoryDao {
 
     @Query("DELETE FROM Categories")
     fun deleteAllCategories()
+
+
+    @Query("UPDATE Categories SET isPinned = :isPinned WHERE id = :categoryId")
+    fun updatePinnedValue(categoryId: Long, isPinned: Boolean)
 
 }

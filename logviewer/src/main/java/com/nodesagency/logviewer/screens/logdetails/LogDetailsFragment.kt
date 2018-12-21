@@ -1,6 +1,8 @@
 package com.nodesagency.logviewer.screens.logdetails
 
+import android.content.Context
 import android.content.Intent
+import android.graphics.Point
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,6 +15,12 @@ import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
 import com.nodesagency.logviewer.screens.logs.utilities.SeverityToColorConverter
 import kotlinx.android.synthetic.main.fragment_log_details.*
+import android.view.Display
+import android.content.Context.WINDOW_SERVICE
+import androidx.core.content.ContextCompat.getSystemService
+import android.util.DisplayMetrics
+
+
 
 private const val ARGUMENT_LOG_ENTRY_ID = "log_entry_id"
 private const val ARGUMENT_SEVERITY_ID = "severity_id"
@@ -40,7 +48,6 @@ internal class LogDetailsFragment : DialogFragment() {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         val logRepository = Logger.getRepository()
         viewModel = ViewModelProviders
             .of(this, LogDetailsViewModelFactory(logRepository, logEntryId))
@@ -79,9 +86,18 @@ internal class LogDetailsFragment : DialogFragment() {
 
     private fun updateLayoutParameters() {
         val params = dialog?.window?.attributes
+        val metrics = DisplayMetrics()
+        val wm = context?.getSystemService(Context.WINDOW_SERVICE) as WindowManager
+        val display = wm.defaultDisplay
+        display.getMetrics(metrics)
 
-        params?.width = ViewGroup.LayoutParams.MATCH_PARENT
-        params?.height = ViewGroup.LayoutParams.WRAP_CONTENT
+        if (metrics.heightPixels > metrics.widthPixels) {
+            params?.height = (metrics.heightPixels * 0.80).toInt()
+            params?.width = ViewGroup.LayoutParams.MATCH_PARENT
+        } else {
+            params?.height = ViewGroup.LayoutParams.WRAP_CONTENT
+            params?.width = (metrics.widthPixels * 0.80).toInt()
+        }
 
         dialog?.window?.attributes = params as WindowManager.LayoutParams
     }

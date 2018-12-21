@@ -18,7 +18,7 @@ private const val FRAGMENT_LOG_DETAILS = "log_details"
 private const val STATE_TITLE = "state_title"
 
 class LogViewerActivity : AppCompatActivity(),
-    OnCategorySelectListener,
+    CategoriesFragment.CategoriesFragmentListener,
     OnLogSelectListener,
     FragmentManager.OnBackStackChangedListener {
 
@@ -102,4 +102,6 @@ class LogViewerActivity : AppCompatActivity(),
             .replace(R.id.fragmentContainerView, CategoriesFragment.newInstance(), FRAGMENT_CATEGORIES)
             .commit()
     }
+
+
 }
