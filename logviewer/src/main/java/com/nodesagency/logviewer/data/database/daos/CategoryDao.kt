@@ -28,4 +28,7 @@ internal interface CategoryDao {
     @Query("DELETE FROM Categories")
     fun deleteAllCategories()
 
+    @Query("SELECT * FROM Categories")
+    fun getAllCategories() : List<Category>
+
 }

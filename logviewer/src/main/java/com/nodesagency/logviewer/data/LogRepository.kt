@@ -55,8 +55,20 @@ interface LogRepository {
 
     /**
      * @return content URI for the copy of repository backing storage ( such as .db files etc) if available
-     * null otherwise
+     *
      */
     fun getShareableCopyUri() : Uri?
 
+
+    /**
+     * @return content URI for the file with all the logs from all categories
+     */
+    fun getAllLogsFileUri() : Uri?
+
+
+    /**
+     * @returns true if repository is able to provide copy pf backing storage
+     * false otherwise
+     */
+    fun isBackingStorageCopyAvailable() : Boolean
 }

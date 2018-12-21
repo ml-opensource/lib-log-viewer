@@ -18,7 +18,13 @@
             <item
                 android:id="@+id/actionShareLogsDump"
                 android:title="@string/action_share_log_dump"/>
+
+            <item
+                android:title="@string/share_all_logs"
+                android:id="@+id/actionShareAllLogs"/>
+
         </menu>
+
 
     </item>
 

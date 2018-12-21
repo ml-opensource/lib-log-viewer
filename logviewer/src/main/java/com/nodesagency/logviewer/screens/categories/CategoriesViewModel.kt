@@ -25,15 +25,41 @@ internal class CategoriesViewModel(val logRepository: LogRepository) : ViewModel
     })
 
     val storageCopyUriLiveData: MutableLiveData<Uri?> = MutableLiveData()
+    val allLogsFileUri = MutableLiveData<Uri?>()
+
+    val backingStorageAvailableLiveData = MutableLiveData<Boolean>()
+
+
+    val loadingLiveData = MutableLiveData<Boolean>()
 
     init {
+        backingStorageAvailableLiveData.postValue(logRepository.isBackingStorageCopyAvailable())
         queryLiveData.postValue("")
-        GlobalScope.launch {
-            storageCopyUriLiveData.postValue(logRepository.getShareableCopyUri())
-        }
+        loadingLiveData.postValue(false)
+
     }
 
     fun changeCategoriesQuery(query: String) {
         queryLiveData.postValue(query)
     }
+
+    fun loadAllLogsFileUri() {
+        loadingLiveData.postValue(true)
+        GlobalScope.launch {
+            val uri = logRepository.getAllLogsFileUri()
+            loadingLiveData.postValue(false)
+            storageCopyUriLiveData.postValue(uri)
+        }
+    }
+
+    fun loadBackingStorageFile() {
+        loadingLiveData.postValue(true)
+        GlobalScope.launch {
+            val uri = logRepository.getShareableCopyUri()
+            loadingLiveData.postValue(false)
+            storageCopyUriLiveData.postValue(uri)
+
+        }
+    }
+
 }

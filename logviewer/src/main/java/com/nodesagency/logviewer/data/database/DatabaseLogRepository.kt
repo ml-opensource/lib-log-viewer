@@ -2,13 +2,17 @@ package com.nodesagency.logviewer.data.database
 
 import android.content.Context
 import android.net.Uri
+import androidx.core.content.FileProvider
 import androidx.paging.DataSource
+import com.nodesagency.logviewer.BuildConfig
 import com.nodesagency.logviewer.data.LogRepository
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogDetails
 import com.nodesagency.logviewer.data.model.LogEntry
 import com.nodesagency.logviewer.data.model.Severity
 import com.nodesagency.logviewer.domain.Filter
+import java.io.File
+import java.lang.StringBuilder
 
 internal class DatabaseLogRepository(
     private val context: Context,
@@ -98,4 +102,25 @@ internal class DatabaseLogRepository(
     override fun getShareableCopyUri(): Uri? {
         return LogDatabase.getDatabaseCopyUri(context)
     }
+
+    override fun isBackingStorageCopyAvailable(): Boolean {
+        return true
+    }
+
+    override fun getAllLogsFileUri(): Uri? {
+        val inputBuilder = StringBuilder()
+        val categories = database.categoryDao().getAllCategories()
+        for (c in categories) {
+            c.id ?: continue
+            val logsFromCategory = database.logEntryDao().getAllLogEntries(c.id)
+            val logsMessage = logsFromCategory.joinToString("\n") {it.toShareMessage()}
+            inputBuilder.appendln("Logs from: ${c.name} category")
+            inputBuilder.appendln(logsMessage)
+        }
+        val file = File(context.filesDir, "logs.txt")
+        file.writeBytes(inputBuilder.toString().toByteArray())
+        return FileProvider.getUriForFile(context, "${BuildConfig.APPLICATION_ID}.fileprovider", file)
+    }
+
+
 }

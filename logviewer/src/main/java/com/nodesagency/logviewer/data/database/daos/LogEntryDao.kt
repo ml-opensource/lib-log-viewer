@@ -30,6 +30,7 @@ internal interface LogEntryDao {
 
 
 
+
     @Query("SELECT * FROM LogEntries   INNER JOIN Severities sev ON severityId = sev.id WHERE level LIKE :severityQuery  AND categoryId = :categoryId ORDER BY timestampMilliseconds")
     fun getLogsListWithSeverity(categoryId: Long, severityQuery: String) : List<LogEntry>
 

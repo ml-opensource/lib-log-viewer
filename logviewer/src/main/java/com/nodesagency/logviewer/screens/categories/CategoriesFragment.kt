@@ -14,6 +14,8 @@ import androidx.recyclerview.widget.RecyclerView
 import com.nodesagency.logviewer.Logger
 import com.nodesagency.logviewer.R
 import android.content.Intent
+import android.net.Uri
+import kotlinx.android.synthetic.main.fragment_categories.*
 
 
 internal class CategoriesFragment : Fragment() {
@@ -75,7 +77,15 @@ internal class CategoriesFragment : Fragment() {
             .observe(this, Observer(categoriesAdapter::submitList))
 
         categoriesViewModel.storageCopyUriLiveData.observe(this, Observer {
-            activity?.invalidateOptionsMenu()
+           shareFile(it)
+        })
+
+        categoriesViewModel.allLogsFileUri.observe(this, Observer {
+           shareFile(it)
+        })
+
+        categoriesViewModel.loadingLiveData.observe(this, Observer {
+            progressBar.visibility = if (it) View.VISIBLE else View.GONE
         })
     }
 
@@ -83,9 +93,7 @@ internal class CategoriesFragment : Fragment() {
         super.onCreateOptionsMenu(menu, inflater)
         inflater?.inflate(R.menu.menu_categories, menu)
         val shareStorageFileItem = menu?.findItem(R.id.actionShareLogsDump)
-        val shareOptionsItem = menu?.findItem(R.id.actionShareOptions)
-        shareStorageFileItem?.isVisible = categoriesViewModel.storageCopyUriLiveData.value != null
-        shareOptionsItem?.isVisible = categoriesViewModel.storageCopyUriLiveData.value != null
+        shareStorageFileItem?.isVisible = categoriesViewModel.backingStorageAvailableLiveData.value ?: false
 
     }
 
@@ -111,15 +119,13 @@ internal class CategoriesFragment : Fragment() {
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when(item?.itemId) {
+        return when (item?.itemId) {
             R.id.actionShareLogsDump -> {
-                val uri  = categoriesViewModel.storageCopyUriLiveData.value ?: return true
-                val shareIntent = Intent(Intent.ACTION_SEND).apply {
-                    putExtra(Intent.EXTRA_STREAM, uri)
-                    type = "*/*"
-
-                }
-                startActivity(Intent.createChooser(shareIntent, getString(R.string.share_logs_dump_message)))
+                categoriesViewModel.loadBackingStorageFile()
+                true
+            }
+            R.id.actionShareAllLogs -> {
+                categoriesViewModel.loadAllLogsFileUri()
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -137,4 +143,15 @@ internal class CategoriesFragment : Fragment() {
 
         categoriesAdapter.onCategorySelectListener = null
     }
+
+    private fun shareFile(uri: Uri?) {
+        uri ?: return
+        val shareIntent = Intent(Intent.ACTION_SEND).apply {
+            putExtra(Intent.EXTRA_STREAM, uri)
+            type = "*/*"
+
+        }
+        startActivity(Intent.createChooser(shareIntent, getString(R.string.share_file_chooser_message)))
+    }
+
 }
