@@ -9,81 +9,103 @@
     tools:parentTag="androidx.constraintlayout.widget.ConstraintLayout">
 
     <TextView
-        android:id="@+id/tagTitleView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/tagTitle"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
-
-    <TextView
         android:id="@+id/dateTimeView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
         android:layout_marginEnd="8dp"
-        android:layout_marginBottom="8dp"
         android:gravity="center"
         android:text="Date/Time view"
-        app:layout_constraintBottom_toBottomOf="@+id/tagView"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tagTitleView" />
+        app:layout_constraintTop_toTopOf="parent" />
 
-    <TextView
-        android:id="@+id/severityTitleView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="16dp"
-        android:gravity="end"
-        android:text="@string/severityTitle"
-        android:textStyle="bold"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toTopOf="@+id/tagTitleView" />
 
-    <TextView
-        android:id="@+id/tagView"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:id="@+id/frame"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="tagView"
-        app:layout_constraintStart_toStartOf="@+id/tagTitleView"
-        app:layout_constraintTop_toBottomOf="@+id/tagTitleView" />
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toBottomOf="@+id/dateTimeView">
 
-    <TextView
-        android:id="@+id/severityView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:gravity="end"
-        android:text="severityView"
-        app:layout_constraintEnd_toEndOf="@+id/severityTitleView"
-        app:layout_constraintTop_toBottomOf="@+id/severityTitleView" />
+        <TextView
+            android:id="@+id/tagTitleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:text="@string/tagTitle"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"/>
+
+
+        <TextView
+            android:id="@+id/severityTitleView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="8dp"
+            android:gravity="end"
+            android:text="@string/severityTitle"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="@+id/tagTitleView" />
+
+        <View
+            android:id="@+id/view"
+            android:layout_width="1dp"
+            android:layout_height="1dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <TextView
+            android:id="@+id/tagView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:text="tagView"
+            app:layout_constraintEnd_toStartOf="@+id/view"
+            app:layout_constraintStart_toStartOf="@+id/tagTitleView"
+            app:layout_constraintTop_toBottomOf="@+id/tagTitleView" />
+
+        <TextView
+            android:id="@+id/severityView"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:gravity="end"
+            android:text="severityView"
+            app:layout_constraintEnd_toEndOf="@+id/severityTitleView"
+            app:layout_constraintStart_toEndOf="@+id/view"
+            app:layout_constraintTop_toBottomOf="@+id/severityTitleView" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
     <TextView
         android:id="@+id/messageView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:layout_marginEnd="0dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:text="Message view"
         app:layout_constraintBottom_toTopOf="@+id/stackTraceView"
-        app:layout_constraintEnd_toEndOf="@+id/severityView"
-        app:layout_constraintStart_toStartOf="@+id/tagView"
-        app:layout_constraintTop_toBottomOf="@+id/tagView" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/tagTitleView"
+        app:layout_constraintTop_toBottomOf="@+id/frame" />
 
     <TextView
         android:id="@+id/stackTraceView"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="0dp"
+        android:layout_marginEnd="8dp"
         android:layout_marginBottom="16dp"
         android:text="Stack trace view"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/severityView"
+        app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="@+id/messageView"
         app:layout_constraintTop_toBottomOf="@+id/messageView" />
 
