@@ -1,5 +1,7 @@
 package com.nodesagency.logviewer.data.model
 
+import android.net.Uri
+
 /**
  * Log entry merged with the category and severity names meant for display
  */
@@ -10,7 +12,7 @@ data class LogDetails(
     val severity: String,
     val message: String,
     val stackTrace: String?,
-    val screenshotUri: String?
+    val screenshotUri: Uri?
 ) {
 
     fun toShareMessage() : String {

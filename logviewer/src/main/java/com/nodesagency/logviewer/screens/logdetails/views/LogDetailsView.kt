@@ -47,7 +47,7 @@ internal class LogDetailsView @JvmOverloads constructor(
             severityView.text = severity
             messageView.text = message
             stackTraceView.text = stackTrace
-            logDetails.screenshotUri?.let { screenshotImageView.setImageURI(Uri.parse(it)) }
+            screenshotImageView.setImageURI(logDetails.screenshotUri)
             stackTraceView.visibility = if (stackTrace.isNullOrBlank()) View.GONE else { View.VISIBLE }
         }
     }

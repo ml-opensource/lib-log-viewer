@@ -1,9 +1,8 @@
 package com.nodesagency.logviewer.data.database
 
 import android.content.Context
-import androidx.room.Database
-import androidx.room.Room
-import androidx.room.RoomDatabase
+import android.net.Uri
+import androidx.room.*
 import androidx.room.migration.Migration
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.nodesagency.logviewer.data.database.daos.CategoryDao
@@ -19,6 +18,7 @@ private const val DATABASE_NAME = "log_database"
 
 
 @Database(entities = [Category::class, LogEntry::class, Severity::class], version = 2)
+@TypeConverters(Converters::class)
 internal abstract class LogDatabase : RoomDatabase() {
 
     companion object {
@@ -46,5 +46,20 @@ internal abstract class LogDatabase : RoomDatabase() {
     abstract fun logDetailsDao(): LogDetailsDao
 
 
+
+}
+
+internal class Converters {
+
+    @TypeConverter
+    fun fromUri(uri: String?) : Uri? {
+        uri ?: return null
+        return Uri.parse(uri)
+    }
+
+    @TypeConverter
+    fun uriToString(uri: Uri?) : String? {
+        return uri?.toString()
+    }
 
 }

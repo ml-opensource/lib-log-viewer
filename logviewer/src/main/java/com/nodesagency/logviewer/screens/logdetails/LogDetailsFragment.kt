@@ -65,10 +65,8 @@ internal class LogDetailsFragment : DialogFragment() {
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, logDetails.toShareMessage())
+                    putExtra(Intent.EXTRA_STREAM, logDetails.screenshotUri)
                     type = "*/*"
-                }
-                logDetails.screenshotUri?.let {
-                    sendIntent.putExtra(Intent.EXTRA_STREAM, Uri.parse(it))
                 }
                 startActivity(Intent.createChooser(sendIntent, getString(R.string.share_log_message)))
             }
