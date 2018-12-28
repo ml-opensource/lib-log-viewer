@@ -41,7 +41,6 @@ internal class LogDetailsView @JvmOverloads constructor(
     }
 
     fun setLogDetails(logDetails: LogDetails) {
-        Log.d("URITEST", logDetails.screenshotUri.toString())
         logDetails.run {
             dateTimeView.text = timestampMilliseconds.formatTimestampInMilliseconds()
             tagView.text = tag

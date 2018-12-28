@@ -127,6 +127,7 @@ object Logger {
     fun clearAllLogs(): Job = doAfterInitializationCheck {
         joinInIoScope {
             logRepository.deleteAllCategoriesAndLogs()
+            screenshotRepository.deleteAllScreenshots()
         }
     }
 

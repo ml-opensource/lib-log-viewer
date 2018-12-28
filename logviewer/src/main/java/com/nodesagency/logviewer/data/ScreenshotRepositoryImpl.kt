@@ -17,9 +17,13 @@ class ScreenshotRepositoryImpl(val context: Context) : ScreenshotRepository{
 
     private val storage = context.filesDir
 
+    companion object {
+        private const val NAME_PREFIX = "SCREEN_"
+    }
+
     override fun saveScreenshot(bitmap: Bitmap): Uri {
         val timeStamp = SimpleDateFormat("yyyyMMdd_HHmmss").format(Date())
-        val fileName =  "IMG_$timeStamp.jpg"
+        val fileName =  "$NAME_PREFIX$timeStamp.jpg"
         val file = File("${storage.path}${File.separator}$fileName")
         file.createNewFile()
 
@@ -31,10 +35,19 @@ class ScreenshotRepositoryImpl(val context: Context) : ScreenshotRepository{
 
     }
 
-   private fun Bitmap.toByteArray() : ByteArray {
+    override fun deleteAllScreenshots() {
+        storage.listFiles()
+            .filter { it.name.startsWith(NAME_PREFIX) }
+            .forEach { it.delete() }
+
+    }
+
+    private fun Bitmap.toByteArray() : ByteArray {
         val output = ByteArrayOutputStream()
         compress(Bitmap.CompressFormat.JPEG, 100, output)
         return output.toByteArray()
     }
+
+
 
 }
