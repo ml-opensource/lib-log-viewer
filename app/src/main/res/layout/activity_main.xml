@@ -57,7 +57,7 @@
 
     <Button
         android:id="@+id/logScreenBtn"
-        android:text="Log Screen"
+        android:text="@string/log_with_screenshot"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"

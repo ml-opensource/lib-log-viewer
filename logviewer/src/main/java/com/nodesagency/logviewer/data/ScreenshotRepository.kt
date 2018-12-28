@@ -5,6 +5,7 @@ import android.net.Uri
 
 interface ScreenshotRepository {
 
+
     fun saveScreenshot(bitmap: Bitmap) : Uri
 
     fun deleteAllScreenshots()

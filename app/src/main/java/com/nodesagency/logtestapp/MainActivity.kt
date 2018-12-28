@@ -44,10 +44,9 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (view.id) {
             R.id.startButton -> startLogViewerActivityWithLiveLogging()
             R.id.clearAllLogsButton -> clearAllLogs()
-            R.id.logScreenBtn -> Logger.log(
-                tag = "ScreenTag",
-                categoryName = "Screenshot",
-                message = "Screeshot logged",
+            R.id.logScreenBtn -> Logger.wtf(
+                categoryName = "Screenshots",
+                message = "Screenshot logged",
                 includeScreenshot = true
             )
         }
