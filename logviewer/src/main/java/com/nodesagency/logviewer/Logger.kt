@@ -1,9 +1,19 @@
 package com.nodesagency.logviewer
 
+import android.annotation.SuppressLint
+import android.app.Activity
+import android.app.Application
 import android.content.Context
+import android.graphics.Bitmap
+import android.net.Uri
+import android.os.Bundle
+import android.util.Log
+import android.view.View
 import androidx.annotation.VisibleForTesting
 import com.nodesagency.logviewer.concurrency.CoroutineScopeProvider
 import com.nodesagency.logviewer.data.LogRepository
+import com.nodesagency.logviewer.data.ScreenshotRepository
+import com.nodesagency.logviewer.data.ScreenshotRepositoryImpl
 import com.nodesagency.logviewer.data.database.DatabaseLogRepository
 import com.nodesagency.logviewer.data.model.Category
 import com.nodesagency.logviewer.data.model.LogEntry
@@ -13,14 +23,17 @@ import kotlinx.coroutines.*
 import java.io.PrintWriter
 import java.io.StringWriter
 
+
 internal const val GENERAL_CATEGORY_ID = 0L
 internal const val GENERAL_CATEGORY_NAME = "General"
 
-
+@SuppressLint("staticfieldleak")
 object Logger {
 
     private var isInitialized = false
+    private var currentScreen: Activity? = null
     private lateinit var logRepository: LogRepository
+    private lateinit var screenshotRepository: ScreenshotRepository
 
     /**
      * Initializes the library. This has to be called before any logging is performed. Usually you'll want to do this in
@@ -33,6 +46,7 @@ object Logger {
      */
     fun initialize(
         context: Context,
+        screenshotRepository: ScreenshotRepository = ScreenshotRepositoryImpl(context),
         logRepository: LogRepository = createDefaultLogRepository(context)
     ): Unit = runBlocking {
 
@@ -43,6 +57,7 @@ object Logger {
         }
 
         this@Logger.logRepository = logRepository
+        this@Logger.screenshotRepository = screenshotRepository
 
         joinInIoScope {
             RepositoryInitializer(Logger.logRepository).initialize()
@@ -51,6 +66,11 @@ object Logger {
                 isInitialized = true
             }
         }.join()
+        context.addScreenChangedListener(
+            onScreenClosed = { currentScreen = null },
+            onScreenOpened = { currentScreen = it}
+        )
+
     }
 
     /**
@@ -70,7 +90,8 @@ object Logger {
         severityLevel: String = CommonSeverityLevels.VERBOSE.severity.level,
         tag: String? = null,
         categoryName: String = GENERAL_CATEGORY_NAME,
-        throwable: Throwable? = null
+        throwable: Throwable? = null,
+        includeScreenshot: Boolean = false
     ): Job = doAfterInitializationCheck {
         joinInIoScope {
             storeLog(
@@ -78,7 +99,8 @@ object Logger {
                 severityLevel = severityLevel,
                 message = message,
                 throwable = throwable,
-                tag = tag
+                tag = tag,
+                includeScreenshot = includeScreenshot
             )
         }
     }
@@ -113,23 +135,34 @@ object Logger {
         severityLevel: String,
         message: String,
         throwable: Throwable?,
-        tag: String?
+        tag: String?,
+        includeScreenshot: Boolean
     ) {
         val categoryId = logRepository.getIdForCategoryName(categoryName) ?: insertNewCategory(categoryName)
         val severityId = logRepository.getIdForSeverityLevel(severityLevel) ?: insertNewSeverity(severityLevel)
 
+        val screenshotUri = if (includeScreenshot) storeScreenshot() else null
         val logEntry = LogEntry(
             categoryId = categoryId,
             severityId = severityId,
             message = message,
             stackTrace = throwable?.getStackTraceAsString(),
             tag = tag,
-            timestampMilliseconds = System.currentTimeMillis()
+            timestampMilliseconds = System.currentTimeMillis(),
+            screenshotUri = screenshotUri?.toString()
         )
 
         // TODO: Notify features about the new log entry
 
         logRepository.put(logEntry)
+    }
+
+    private fun storeScreenshot() : Uri? {
+        val screenView = currentScreen?.window?.findViewById<View>(android.R.id.content)?.rootView ?: return null
+        screenView.isDrawingCacheEnabled = true
+        val bitmap = Bitmap.createBitmap(screenView.drawingCache)
+        screenView.isDrawingCacheEnabled = false
+        return screenshotRepository.saveScreenshot(bitmap)
     }
 
     internal fun getRepository(): LogRepository = doAfterInitializationCheck { logRepository }
@@ -180,4 +213,26 @@ private fun Throwable.getStackTraceAsString(): String {
     return StringWriter()
         .apply { printStackTrace(PrintWriter(this)) }
         .toString()
+}
+
+
+private fun Context.addScreenChangedListener(onScreenOpened: (Activity?) -> Unit, onScreenClosed: () -> Unit) {
+    (this as Application).registerActivityLifecycleCallbacks( object : Application.ActivityLifecycleCallbacks {
+
+
+        override fun onActivityPaused(p0: Activity?) {
+            onScreenClosed()
+        }
+
+        override fun onActivityResumed(p0: Activity?) {
+            onScreenOpened(p0)
+        }
+
+        override fun onActivityStarted(p0: Activity?) {}
+        override fun onActivityDestroyed(p0: Activity?) {}
+        override fun onActivitySaveInstanceState(p0: Activity?, p1: Bundle?) {}
+        override fun onActivityStopped(p0: Activity?) {}
+        override fun onActivityCreated(p0: Activity?, p1: Bundle?) {}
+    })
+
 }

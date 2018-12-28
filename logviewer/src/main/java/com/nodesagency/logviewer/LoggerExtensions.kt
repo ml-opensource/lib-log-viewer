@@ -16,13 +16,15 @@ fun Logger.d(
     message: String,
     tag: String? = null,
     categoryName: String = GENERAL_CATEGORY_NAME,
-    throwable: Throwable? = null
+    throwable: Throwable? = null,
+    includeScreenshot: Boolean = false
 ) = Logger.log(
     message = message,
     severityLevel = CommonSeverityLevels.DEBUG.severity.level,
     tag = tag,
     categoryName = categoryName,
-    throwable = throwable
+    throwable = throwable,
+    includeScreenshot = includeScreenshot
 )
 
 /**
@@ -41,13 +43,15 @@ fun Logger.e(
     message: String,
     tag: String? = null,
     categoryName: String = GENERAL_CATEGORY_NAME,
-    throwable: Throwable? = null
+    throwable: Throwable? = null,
+    includeScreenshot: Boolean = false
 ) = Logger.log(
     message = message,
     severityLevel = CommonSeverityLevels.ERROR.severity.level,
     tag = tag,
     categoryName = categoryName,
-    throwable = throwable
+    throwable = throwable,
+    includeScreenshot = includeScreenshot
 )
 
 /**
@@ -66,13 +70,15 @@ fun Logger.i(
     message: String,
     tag: String? = null,
     categoryName: String = GENERAL_CATEGORY_NAME,
-    throwable: Throwable? = null
+    throwable: Throwable? = null,
+    includeScreenshot: Boolean = false
 ) = Logger.log(
     message = message,
     severityLevel = CommonSeverityLevels.INFO.severity.level,
     tag = tag,
     categoryName = categoryName,
-    throwable = throwable
+    throwable = throwable,
+    includeScreenshot = includeScreenshot
 )
 
 /**
@@ -91,13 +97,16 @@ fun Logger.v(
     message: String,
     tag: String? = null,
     categoryName: String = GENERAL_CATEGORY_NAME,
-    throwable: Throwable? = null
+    throwable: Throwable? = null,
+    includeScreenshot: Boolean = false
+
 ) = Logger.log(
     message = message,
     severityLevel = CommonSeverityLevels.VERBOSE.severity.level,
     tag = tag,
     categoryName = categoryName,
-    throwable = throwable
+    throwable = throwable,
+    includeScreenshot = includeScreenshot
 )
 
 /**
@@ -116,13 +125,16 @@ fun Logger.w(
     message: String,
     tag: String? = null,
     categoryName: String = GENERAL_CATEGORY_NAME,
-    throwable: Throwable? = null
+    throwable: Throwable? = null,
+    includeScreenshot: Boolean = false
+
 ) = Logger.log(
     message = message,
     severityLevel = CommonSeverityLevels.WARNING.severity.level,
     tag = tag,
     categoryName = categoryName,
-    throwable = throwable
+    throwable = throwable,
+    includeScreenshot = includeScreenshot
 )
 
 /**
@@ -141,11 +153,14 @@ fun Logger.wtf(
     message: String,
     tag: String? = null,
     categoryName: String = GENERAL_CATEGORY_NAME,
-    throwable: Throwable? = null
+    throwable: Throwable? = null,
+    includeScreenshot: Boolean = false
 ) = Logger.log(
     message = message,
     severityLevel = CommonSeverityLevels.WTF.severity.level,
     tag = tag,
     categoryName = categoryName,
-    throwable = throwable
+    throwable = throwable,
+    includeScreenshot = includeScreenshot
+
 )

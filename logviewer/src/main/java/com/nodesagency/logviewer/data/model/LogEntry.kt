@@ -1,5 +1,6 @@
 package com.nodesagency.logviewer.data.model
 
+import android.net.Uri
 import androidx.room.Entity
 import androidx.room.ForeignKey
 import androidx.room.PrimaryKey
@@ -32,7 +33,8 @@ data class LogEntry(
     val severityId: Long,
     val message: String,
     val stackTrace: String?,
-    val tag: String? = null
+    val tag: String? = null,
+    val screenshotUri: String?
 ) {
 
     fun toShareMessage() : String {

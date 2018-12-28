@@ -1,9 +1,12 @@
 package com.nodesagency.logviewer.screens.logdetails.views
 
 import android.content.Context
+import android.net.Uri
 import android.util.AttributeSet
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.widget.ImageView
 import android.widget.TextView
 import androidx.constraintlayout.widget.ConstraintLayout
 import com.nodesagency.logviewer.R
@@ -21,6 +24,7 @@ internal class LogDetailsView @JvmOverloads constructor(
     private val severityView: TextView
     private val messageView: TextView
     private val stackTraceView: TextView
+    private val screenshotImageView: ImageView
 
     init {
         LayoutInflater
@@ -32,16 +36,19 @@ internal class LogDetailsView @JvmOverloads constructor(
         severityView = findViewById(R.id.severityView)
         messageView = findViewById(R.id.messageView)
         stackTraceView = findViewById(R.id.stackTraceView)
+        screenshotImageView = findViewById(R.id.screenshotImageView)
+
     }
 
     fun setLogDetails(logDetails: LogDetails) {
+        Log.d("URITEST", logDetails.screenshotUri.toString())
         logDetails.run {
             dateTimeView.text = timestampMilliseconds.formatTimestampInMilliseconds()
             tagView.text = tag
             severityView.text = severity
             messageView.text = message
             stackTraceView.text = stackTrace
-
+            logDetails.screenshotUri?.let { screenshotImageView.setImageURI(Uri.parse(it)) }
             stackTraceView.visibility = if (stackTrace.isNullOrBlank()) View.GONE else { View.VISIBLE }
         }
     }

@@ -9,7 +9,8 @@ data class LogDetails(
     val category: String,
     val severity: String,
     val message: String,
-    val stackTrace: String?
+    val stackTrace: String?,
+    val screenshotUri: String?
 ) {
 
     fun toShareMessage() : String {
