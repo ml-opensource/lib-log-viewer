@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.Application
 import android.content.Context
 import android.graphics.Bitmap
+import android.graphics.Canvas
 import android.net.Uri
 import android.os.Bundle
 import android.util.Log
@@ -22,6 +23,11 @@ import com.nodesagency.logviewer.domain.RepositoryInitializer
 import kotlinx.coroutines.*
 import java.io.PrintWriter
 import java.io.StringWriter
+import android.graphics.drawable.Drawable
+import android.opengl.ETC1.getHeight
+import android.opengl.ETC1.getWidth
+
+
 
 
 internal const val GENERAL_CATEGORY_ID = 0L
@@ -82,6 +88,7 @@ object Logger {
      * @param tag the regular log tag
      * @param categoryName the name of the category this log is grouped under, or [GENERAL_CATEGORY_NAME] if not provided
      * @param throwable the optional throwable object to display the stack-trace from
+     * @param includeScreenshot indicates whether or not screenshot will be included with log, false by default
      *
      * @return the job started to store the log
      */
@@ -160,9 +167,9 @@ object Logger {
 
     private fun storeScreenshot() : Uri? {
         val screenView = currentScreen?.window?.findViewById<View>(android.R.id.content)?.rootView ?: return null
-        screenView.isDrawingCacheEnabled = true
-        val bitmap = Bitmap.createBitmap(screenView.drawingCache)
-        screenView.isDrawingCacheEnabled = false
+        val bitmap = Bitmap.createBitmap(screenView.width, screenView.height, Bitmap.Config.ARGB_8888)
+        val canvas = Canvas(bitmap)
+        screenView.draw(canvas)
         return screenshotRepository.saveScreenshot(bitmap)
     }
 

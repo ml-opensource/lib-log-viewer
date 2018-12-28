@@ -9,6 +9,7 @@ package com.nodesagency.logviewer
  * @param tag the regular log tag
  * @param categoryName the name of the category this log is grouped under, or [GENERAL_CATEGORY_NAME] if not provided
  * @param throwable the optional throwable object to display the stack-trace from
+ * @param includeScreenshot indicates whether or not screenshot will be included with log, false by default
  *
  * @return the job started to store the log
  */
@@ -36,6 +37,7 @@ fun Logger.d(
  * @param tag the regular log tag
  * @param categoryName the name of the category this log is grouped under, or [GENERAL_CATEGORY_NAME] if not provided
  * @param throwable the optional throwable object to display the stack-trace from
+ * @param includeScreenshot indicates whether or not screenshot will be included with log, false by default
  *
  * @return the job started to store the log
  */
@@ -63,6 +65,7 @@ fun Logger.e(
  * @param tag the regular log tag
  * @param categoryName the name of the category this log is grouped under, or [GENERAL_CATEGORY_NAME] if not provided
  * @param throwable the optional throwable object to display the stack-trace from
+ * @param includeScreenshot indicates whether or not screenshot will be included with log, false by default
  *
  * @return the job started to store the log
  */
@@ -90,6 +93,7 @@ fun Logger.i(
  * @param tag the regular log tag
  * @param categoryName the name of the category this log is grouped under, or [GENERAL_CATEGORY_NAME] if not provided
  * @param throwable the optional throwable object to display the stack-trace from
+ * @param includeScreenshot indicates whether or not screenshot will be included with log, false by default
  *
  * @return the job started to store the log
  */
@@ -118,6 +122,7 @@ fun Logger.v(
  * @param tag the regular log tag
  * @param categoryName the name of the category this log is grouped under, or [GENERAL_CATEGORY_NAME] if not provided
  * @param throwable the optional throwable object to display the stack-trace from
+ * @param includeScreenshot indicates whether or not screenshot will be included with log, false by default
  *
  * @return the job started to store the log
  */
@@ -146,6 +151,7 @@ fun Logger.w(
  * @param tag the regular log tag
  * @param categoryName the name of the category this log is grouped under, or [GENERAL_CATEGORY_NAME] if not provided
  * @param throwable the optional throwable object to display the stack-trace from
+ * @param includeScreenshot indicates whether or not screenshot will be included with log, false by default
  *
  * @return the job started to store the log
  */
