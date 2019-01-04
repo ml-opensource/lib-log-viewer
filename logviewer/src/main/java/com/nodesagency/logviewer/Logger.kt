@@ -26,8 +26,7 @@ import java.io.StringWriter
 import android.graphics.drawable.Drawable
 import android.opengl.ETC1.getHeight
 import android.opengl.ETC1.getWidth
-
-
+import java.lang.ref.WeakReference
 
 
 internal const val GENERAL_CATEGORY_ID = 0L
@@ -37,7 +36,7 @@ internal const val GENERAL_CATEGORY_NAME = "General"
 object Logger {
 
     private var isInitialized = false
-    private var currentScreen: Activity? = null
+    private var currentScreen: WeakReference<Activity?>? = null
     private lateinit var logRepository: LogRepository
     private lateinit var screenshotRepository: ScreenshotRepository
 
@@ -74,7 +73,7 @@ object Logger {
         }.join()
         context.addScreenChangedListener(
             onScreenClosed = { currentScreen = null },
-            onScreenOpened = { currentScreen = it}
+            onScreenOpened = { currentScreen = WeakReference(it)}
         )
 
     }
@@ -166,7 +165,7 @@ object Logger {
     }
 
     private fun storeScreenshot() : Uri? {
-        val screenView = currentScreen?.window?.findViewById<View>(android.R.id.content)?.rootView ?: return null
+        val screenView = currentScreen?.get()?.window?.findViewById<View>(android.R.id.content)?.rootView ?: return null
         val bitmap = Bitmap.createBitmap(screenView.width, screenView.height, Bitmap.Config.ARGB_8888)
         val canvas = Canvas(bitmap)
         screenView.draw(canvas)
