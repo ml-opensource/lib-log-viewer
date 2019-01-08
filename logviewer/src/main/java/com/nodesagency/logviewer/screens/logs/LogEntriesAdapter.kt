@@ -36,6 +36,9 @@ internal class LogEntriesAdapter(
     private fun ViewHolder.bind(logEntry: LogEntry, position: Int) {
         logItemView.lineNumber = position
         logItemView.tag = logEntry.tag
+
+        logItemView.screenshotVisible = logEntry.screenshotUri != null
+
         logItemView.message = logEntry.message
         logItemView.setOnClickListener {
             if (logEntry.id != null) {

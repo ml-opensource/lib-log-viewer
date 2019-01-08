@@ -46,6 +46,7 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
             R.id.clearAllLogsButton -> clearAllLogs()
             R.id.logScreenBtn -> Logger.wtf(
                 categoryName = "Screenshots",
+                tag = "Tag",
                 message = "Screenshot logged",
                 includeScreenshot = true
             )

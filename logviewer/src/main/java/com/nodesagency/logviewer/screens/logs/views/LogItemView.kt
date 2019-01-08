@@ -1,6 +1,7 @@
 package com.nodesagency.logviewer.screens.logs.views
 
 import android.content.Context
+import android.graphics.Rect
 import android.graphics.drawable.ColorDrawable
 import android.graphics.drawable.Drawable
 import android.graphics.drawable.LayerDrawable
@@ -51,6 +52,13 @@ internal class LogItemView @JvmOverloads constructor(
         ))
     }
 
+    var screenshotVisible: Boolean = false
+        set(value) {
+            field = value
+            if (field) tagView.setDrawableStart(R.drawable.ic_photo_black_24dp)
+            else tagView.setDrawableStart(null)
+        }
+
     init {
         LayoutInflater
             .from(context)
@@ -70,4 +78,9 @@ internal class LogItemView @JvmOverloads constructor(
         selectableDrawable = context.getDrawable(outValue.resourceId)
     }
 
+
+    private fun TextView.setDrawableStart(resId: Int?) {
+        val drawable = resId?.let { context.getDrawable(it).apply { bounds = Rect(0, 0, 60, 60) } }
+        setCompoundDrawables(drawable, null, null, null)
+}
 }
