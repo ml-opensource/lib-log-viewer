@@ -62,29 +62,44 @@
         app:layout_constraintEnd_toEndOf="@+id/severityTitleView"
         app:layout_constraintTop_toBottomOf="@+id/severityTitleView" />
 
+
+    <LinearLayout
+        android:layout_marginEnd="16dp"
+        android:layout_marginStart="16dp"
+        app:layout_constraintTop_toBottomOf="@+id/tagView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        android:orientation="vertical">
+
     <TextView
         android:id="@+id/messageView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="16dp"
-        android:text="Message view"
-        app:layout_constraintBottom_toTopOf="@+id/stackTraceView"
-        app:layout_constraintEnd_toEndOf="@+id/severityView"
-        app:layout_constraintStart_toStartOf="@+id/tagView"
-        app:layout_constraintTop_toBottomOf="@+id/tagView" />
+        android:text="Message view"/>
 
     <TextView
         android:id="@+id/stackTraceView"
-        android:layout_width="0dp"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginEnd="0dp"
         android:layout_marginBottom="16dp"
-        android:text="Stack trace view"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="@+id/severityView"
-        app:layout_constraintStart_toStartOf="@+id/messageView"
-        app:layout_constraintTop_toBottomOf="@+id/messageView" />
+        android:text="Stack trace view"/>
+
+
+
+    <ImageView
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@id/stackTraceView"
+        android:id="@+id/screenshotImageView"
+        android:layout_height="wrap_content"
+        android:layout_width="match_parent"
+        />
+
+
+    </LinearLayout>
+
 
 </merge>

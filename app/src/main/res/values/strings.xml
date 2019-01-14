@@ -2,5 +2,6 @@
     <string name="app_name">LogViewer Test App</string>
     <string name="test_app_introduction_message">Welcome! Please press start to start generating example logs and start the logging screen.</string>
     <string name="start">Start</string>
+    <string name="log_with_screenshot">Log with a screenshot</string>
     <string name="clearAllLogs">Clear all logs</string>
 </resources>

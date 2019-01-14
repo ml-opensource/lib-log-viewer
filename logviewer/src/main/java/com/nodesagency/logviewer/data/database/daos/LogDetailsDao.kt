@@ -14,7 +14,8 @@ internal interface LogDetailsDao {
             Categories.name AS category,
             Severities.level as severity,
             message,
-            stackTrace
+            stackTrace,
+            screenshotUri
         FROM
             Categories INNER JOIN LogEntries INNER JOIN Severities
         WHERE

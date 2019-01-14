@@ -1,10 +1,13 @@
 package com.nodesagency.logtestapp
 
+import android.content.DialogInterface
 import android.os.Bundle
 import android.view.View
+import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import com.nodesagency.logviewer.LogViewerActivity
 import com.nodesagency.logviewer.Logger
+import com.nodesagency.logviewer.wtf
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.coroutines.runBlocking
 
@@ -41,11 +44,18 @@ class MainActivity : AppCompatActivity(), View.OnClickListener {
         when (view.id) {
             R.id.startButton -> startLogViewerActivityWithLiveLogging()
             R.id.clearAllLogsButton -> clearAllLogs()
+            R.id.logScreenBtn -> Logger.wtf(
+                categoryName = "Screenshots",
+                tag = "Tag",
+                message = "Screenshot logged",
+                includeScreenshot = true
+            )
         }
     }
 
     private fun setAllButtonListener(listener: View.OnClickListener?) {
         startButton.setOnClickListener(listener)
+        logScreenBtn.setOnClickListener(listener)
         clearAllLogsButton.setOnClickListener(listener)
     }
 

@@ -27,6 +27,7 @@
         android:typeface="monospace"
         tools:ignore="SmallSp" />
 
+
     <TextView
         android:id="@+id/messageView"
         android:layout_width="0dp"

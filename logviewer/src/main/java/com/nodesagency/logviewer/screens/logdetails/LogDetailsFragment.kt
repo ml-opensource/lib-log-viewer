@@ -1,6 +1,7 @@
 package com.nodesagency.logviewer.screens.logdetails
 
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -64,7 +65,8 @@ internal class LogDetailsFragment : DialogFragment() {
                 val sendIntent: Intent = Intent().apply {
                     action = Intent.ACTION_SEND
                     putExtra(Intent.EXTRA_TEXT, logDetails.toShareMessage())
-                    type = "text/plain"
+                    putExtra(Intent.EXTRA_STREAM, logDetails.screenshotUri)
+                    type = "*/*"
                 }
                 startActivity(Intent.createChooser(sendIntent, getString(R.string.share_log_message)))
             }
